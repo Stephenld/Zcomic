@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_main"
+            android:icon="@drawable/main_icon"
+            android:checked="true"
+            android:textColor="@drawable/item_nav_selector_text"
+            android:title="主页面"/>
+        <item
+            android:id="@+id/nav_category"
+            android:icon="@drawable/category_icon"
+            android:textColor="@drawable/item_nav_selector_text"
+            android:title="分类"/>
+        <item
+            android:id="@+id/nav_hot"
+            android:icon="@drawable/hot_icon"
+            android:textColor="@drawable/item_nav_selector_text"
+            android:title="热门"/>
+        <item
+            android:id="@+id/nav_search"
+            android:icon="@drawable/search_icon"
+            android:textColor="@drawable/item_nav_selector_text"
+            android:title="搜索"/>
+    </group>
+
+    <item android:title="附加">
+        <menu>
+            <item
+                android:id="@+id/setting"
+                android:icon="@drawable/setting_icon"
+                android:textColor="@drawable/item_nav_selector_text"
+                android:title="设置"/>
+            <item
+                android:id="@+id/theme"
+                android:icon="@drawable/ic_color_lens_black_24dp"
+                android:textColor="@drawable/item_nav_selector_text"
+                android:title="主题"/>
+            <item
+                android:id="@+id/about"
+                android:icon="@drawable/about_icon"
+                android:textColor="@drawable/item_nav_selector_text"
+                android:title="关于"/>
+        </menu>
+    </item>
+</menu>

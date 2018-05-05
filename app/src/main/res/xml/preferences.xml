@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="个性化">
+        <ListPreference
+            android:defaultValue="1"
+            android:entries="@array/setting_entries_theme"
+            android:entryValues="@array/setting_entry_value"
+            android:key="pref_key_theme"
+            android:summary="原谅绿"
+            android:title="个性换肤"
+            />
+        <!--<ListPreference-->
+            <!--android:defaultValue="1"-->
+            <!--android:key="autoRun"-->
+            <!--android:entries="@array/setting_entries_theme"-->
+            <!--android:entryValues="@array/setting_entry_value"-->
+            <!--android:summary="白天"-->
+            <!--android:title="主题模式" />-->
+        <Preference
+            android:key="simulate"
+            android:singleLine="true"
+            android:title="推送功能" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="基本设置">
+        <Preference
+            android:key="clear_cache"
+            android:singleLine="true"
+            android:summary="缓存大小:0B"
+            android:title="清除缓存" />
+        <Preference
+            android:key="update"
+            android:singleLine="true"
+            android:summary="当前版本 1.0.0"
+            android:title="检查更新" />
+        <Preference
+            android:key="feedback"
+            android:singleLine="true"
+            android:summary="Allen9981@163.com"
+            android:title="意见反馈" />
+    </PreferenceCategory>
+</PreferenceScreen>

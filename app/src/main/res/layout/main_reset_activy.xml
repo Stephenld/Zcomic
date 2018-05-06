@@ -1,13 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                xmlns:app="http://schemas.android.com/apk/res-auto">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_reset"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:titleTextAppearance="@style/Toolbar.TitleText"
+        app:theme="@style/Base.ThemeOverlay.AppCompat.Dark.ActionBar"/>
     <RelativeLayout
         android:id="@+id/reset_rout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp">
+        android:layout_marginTop="70dp">
 
         <EditText
             android:id="@+id/reset_email_et"
@@ -59,10 +67,9 @@
         android:layout_below="@+id/reset_hint_tv"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginTop="30dp"
-        android:background="@drawable/item_teal_selector_no_bord"
+        android:layout_marginTop="20dp"
+        style="@style/Button_Background"
         android:text="重  置"
-        android:textColor="@color/white"
-        android:textSize="16sp" />
+      />
 
 </RelativeLayout>

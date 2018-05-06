@@ -1,39 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--原谅绿-->
+
     <color name="colorPrimary">#00BA91</color>
     <color name="colorPrimaryDark">#00BA91</color>
     <color name="colorAccent">#00BA91</color>
 
-    <!--酷炫黑-->
-    <color name="colorPrimaryDarkBlack">#010001</color>
-    <color name="colorPrimaryBlack">#010001</color>
-    <color name="colorAccentBlack">#010001</color>
+    <color name="colorPrimary_Night">#494849</color>
+    <color name="colorPrimaryDarkNight">#282626</color>
+    <color name="colorAccentNight">#5c5b5b</color>
 
-    <!--少女红-->
-    <color name="colorPrimaryDarkGreen">#FF5050</color>
-    <color name="colorPrimaryGreen">#FF5050</color>
-    <color name="colorAccentGreen">#FF5050</color>
+    <color name="colorPrimary_Pink">#df2993</color>
+    <color name="colorPrimaryDark_Pink">#c20f77</color>
+    <color name="colorAccent_Pik">#ce65a1</color>
 
-    <!--胖次蓝-->
-    <color name="colorPrimaryDarkBlue">#4E77FF</color>
-    <color name="colorPrimaryBlue">#4E77FF</color>
-    <color name="colorAccentBlue">#4E77FF</color>
+    <color name="colorPrimary_Orange">#df7829</color>
+    <color name="colorPrimaryDark_Orange">#c2480f</color>
+    <color name="colorAccent_Orange">#ce9365</color>
 
-    <!--基佬紫-->
-    <color name="colorPrimaryDarkPurple">#A33DF9</color>
-    <color name="colorPrimaryPurple">#A33DF9</color>
-    <color name="colorAccentPurple">#A33DF9</color>
+    <color name="colorPrimary_Yellow">#dfd929</color>
+    <color name="colorPrimaryDark_Yellow">#bfc20f</color>
+    <color name="colorAccent_Yellow">#cbce65</color>
 
-    <!--活力橙-->
-    <color name="colorPrimaryDarkOrange">#FF9150</color>
-    <color name="colorPrimaryOrange">#FF9150</color>
-    <color name="colorAccentOrange">#FF9150</color>
+    <color name="colorPrimary_Green">#26c61b</color>
+    <color name="colorPrimaryDark_Green">#04ae12</color>
+    <color name="colorAccent_Green">#a1eaa7</color>
 
-    <!--大地棕-->
-    <color name="colorPrimaryDarkBrown">#88564D</color>
-    <color name="colorPrimaryBrown">#88564D</color>
-    <color name="colorAccentBrown">#88564D</color>
+    <color name="colorPrimary_Sky">#f4393c</color>
+    <color name="colorPrimaryDark_Sky">#ff010e</color>
+    <color name="colorAccent_Sky">#ed6166</color>
+
+    <color name="colorPrimary_Blue">#3249f5</color>
+    <color name="colorPrimaryDark_Blue">#011aff</color>
+    <color name="colorAccent_Blue">#6e77df</color>
+
+    <color name="colorPrimary_Purple">#cd29df</color>
+    <color name="colorPrimaryDark_Purple">#b30fc2</color>
+    <color name="colorAccent_Purple">#c565ce</color>
+
+    <color name="colorPrimary_PP">#8429df</color>
+    <color name="colorPrimaryDark_PP">#600fc2</color>
+    <color name="colorAccent_PP">#9865ce</color>
+
 
     <color name="background">#f7f7f7</color>
     <color name="transparent">#00000000</color>
@@ -89,14 +96,5 @@
     <color name="nightColorPrimaryDark">#383838</color>
     <color name="nightColorAccent">#a72b55</color>
 
-
 </resources>
 
-
-
-    <!--<?xml version="1.0" encoding="utf-8"?>-->
-<!--<resources>-->
-    <!--<color name="colorPrimary">#3F51B5</color>-->
-    <!--<color name="colorPrimaryDark">#303F9F</color>-->
-    <!--<color name="colorAccent">#FF4081</color>-->
-<!--</resources>-->

@@ -1,20 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white"
-    android:orientation="vertical">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/white"
+              android:orientation="vertical">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_login"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:titleTextAppearance="@style/Toolbar.TitleText"
+        app:theme="@style/Base.ThemeOverlay.AppCompat.Dark.ActionBar">
+    </android.support.v7.widget.Toolbar>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp">
+        android:layout_marginTop="20dp"
+        >
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
-            android:background="@color/white">
+            android:background="@color/white"
+            >
 
             <ImageView
                 android:id="@+id/imageView"
@@ -22,7 +34,8 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="5dp"
-                android:src="@drawable/ic_perm_identity_grey600_24dp" />
+                android:src="@drawable/ic_perm_identity_grey600_24dp"
+                />
 
             <EditText
                 android:id="@+id/login_email_et"
@@ -37,7 +50,8 @@
                 android:background="@null"
                 android:hint="请输入登陆账户"
                 android:singleLine="true"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                />
 
             <ImageView
                 android:id="@+id/login_email_warn_imv"
@@ -48,7 +62,8 @@
                 android:layout_centerVertical="true"
                 android:layout_marginRight="5dp"
                 android:src="@drawable/ic_warning_amber_18dp"
-                android:visibility="gone" />
+                android:visibility="gone"
+                />
         </RelativeLayout>
 
         <RelativeLayout
@@ -57,7 +72,8 @@
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:layout_marginTop="54dp"
-            android:background="@color/white">
+            android:background="@color/white"
+            >
 
             <ImageView
                 android:id="@+id/imageView2"
@@ -65,7 +81,8 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="5dp"
-                android:src="@drawable/ic_lock_outline_grey600_24dp" />
+                android:src="@drawable/ic_lock_outline_grey600_24dp"
+                />
 
             <EditText
                 android:id="@+id/login_passwd_et"
@@ -79,7 +96,8 @@
                 android:hint="请输入密码"
                 android:inputType="textPassword"
                 android:singleLine="true"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                />
 
             <ImageView
                 android:id="@+id/login_password_view_off_imv"
@@ -89,7 +107,8 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="5dp"
-                android:src="@drawable/ic_visibility_off_grey600_18dp" />
+                android:src="@drawable/ic_visibility_off_grey600_18dp"
+                />
         </RelativeLayout>
 
         <RelativeLayout
@@ -97,16 +116,16 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
-            android:layout_marginTop="140dp">
+            android:layout_marginTop="120dp"
+            >
 
             <Button
                 android:id="@+id/login_btn"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:background="@drawable/item_teal_selector_no_bord"
+                style="@style/Button_Background"
                 android:text="登  录"
-                android:textColor="@color/white"
-                android:textSize="16sp" />
+                />
         </RelativeLayout>
 
     </RelativeLayout>
@@ -138,7 +157,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="30dp"
         android:gravity="center"
         android:text="使用第三方登录(暂未开放)"
         android:textColor="@color/text_black9"

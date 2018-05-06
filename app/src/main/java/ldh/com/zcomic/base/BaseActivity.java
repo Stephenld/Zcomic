@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import butterknife.ButterKnife;
+import ldh.com.zcomic.R;
+import ldh.com.zcomic.utils.SharedPreUtils;
 import ldh.com.zcomic.utils.VersionUtils;
 
 /**
@@ -18,6 +20,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.mContext = this;
+        int theme_id = SharedPreUtils.getInt(this,"theme_id", R.style.AppTheme);
+        setTheme(theme_id);
         setContentView(setLayoutResID());
         ButterKnife.bind(mContext);
         initView();
@@ -27,7 +31,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected abstract int setLayoutResID();
     protected abstract void initView();
     protected abstract void initListener();
-    //初始化
+    //初始化，放在initView（）后面
     private void init() {
         //设置显示返回键
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -36,9 +40,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             //取消阴影
             getSupportActionBar().setElevation(0);
         }
-
     }
-
     //返回键的响应
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

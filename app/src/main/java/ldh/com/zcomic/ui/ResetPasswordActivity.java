@@ -5,6 +5,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
+import android.support.v7.widget.Toolbar;
 
 import butterknife.BindView;
 import cn.bmob.v3.BmobUser;
@@ -22,6 +23,9 @@ public class ResetPasswordActivity extends BaseActivity {
     ImageView resetWarnImv;
     @BindView(R.id.reset_passwd_btn)
     Button resetPasswdBtn;
+    @BindView(R.id.toolbar_reset)
+    Toolbar toolbarReset;
+
     @Override
     protected int setLayoutResID() {
         return R.layout.main_reset_activy;
@@ -31,6 +35,7 @@ public class ResetPasswordActivity extends BaseActivity {
      * 初始化页面
      */
     protected void initView() {
+        setSupportActionBar(toolbarReset);
         getSupportActionBar().setTitle("重置密码");
     }
 

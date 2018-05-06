@@ -30,9 +30,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".MainActivity" android:theme="@style/TTheme"/>
-        <activity android:name=".ui.LoginActivity"/>
+        <activity android:name=".ui.LoginActivity"  />
         <activity android:name=".ui.RegisterActivity"/>
         <activity android:name=".ui.ResetPasswordActivity"/>
+        <activity android:name=".ui.SearchActivity"/>
     </application>
 
 </manifest>

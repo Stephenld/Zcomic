@@ -1,32 +1,50 @@
 package ldh.com.zcomic;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
+import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.blankj.utilcode.utils.FileUtils;
+
+import java.lang.ref.WeakReference;
+
 import butterknife.BindView;
 import de.hdodenhof.circleimageview.CircleImageView;
-import ldh.com.zcomic.base.BaseActivity;
 import ldh.com.zcomic.beans.AppUser;
-import ldh.com.zcomic.fragment.CategoryFragment;
+import ldh.com.zcomic.fragment.ClassifyFragment;
+import ldh.com.zcomic.fragment.CollectionFragment;
 import ldh.com.zcomic.fragment.HotFragment;
-import ldh.com.zcomic.fragment.MainFragment;
-import ldh.com.zcomic.fragment.SearchFragment;
-import ldh.com.zcomic.fragment.SettingFragment;
+import ldh.com.zcomic.fragment.NewsFragment;
+import ldh.com.zcomic.fragment.UpdateFragment;
 import ldh.com.zcomic.ui.LoginActivity;
+import ldh.com.zcomic.ui.SearchActivity;
+import ldh.com.zcomic.utils.ActivityUtils;
+import ldh.com.zcomic.utils.SharedPreUtils;
 
-public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener,Toolbar.OnMenuItemClickListener {
     @BindView(R.id.fl_layout)
     FrameLayout mFlLayout;
     @BindView(R.id.toolbar)
@@ -37,10 +55,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     DrawerLayout mDrawerLayout;
 
     private ActionBarDrawerToggle mToggle;
-    private MainFragment mMainFragment;
-    private CategoryFragment mCategoryFragment;
+    private NewsFragment mNewsFragment;
+    private ClassifyFragment mClassifyFragment;
     private HotFragment mHotFragment;
-    private SearchFragment mSearchFragment;
+    private CollectionFragment mCollectionFragment;
+    private UpdateFragment mUpdateFragment;
     private FragmentManager mFragmentManager;
     private TextView user_name, user_email;
     private CircleImageView user_photo;
@@ -48,17 +67,51 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private long waitTime = 2000;
     private long touchTime = 0;
     private static final int REQUEST_CODE = 1;
-    @Override
-    protected int setLayoutResID() {
-        return R.layout.activity_main;
+    private AlertDialog.Builder builder;
+    private String cacheSize = "";//内部缓存
+    private String Size = "";//外部缓存
+    private ActivityUtils utils;
+    private MyHandler mHandler;
+    public static final int SUCCESS = 0;
+    public static final int FAILED = 1;
+
+    class MyHandler extends Handler {
+        WeakReference<MainActivity> mainActivity;
+        public MyHandler(MainActivity activity) {
+            mainActivity = new WeakReference(activity);
+        }
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case SUCCESS:
+                    utils.showToast("清理成功");
+                    break;
+                case FAILED:
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 
     @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        int theme_id = SharedPreUtils.getInt(this,"theme_id", R.style.AppTheme);
+        setTheme(theme_id);
+        setContentView(R.layout.activity_main);
+        initView();
+        initListener();
+    }
+
     protected void initView() {
+
         mFlLayout = findViewById(R.id.fl_layout);
         mToolbar = findViewById(R.id.toolbar);
         mNavView = findViewById(R.id.nav_view);
         mDrawerLayout = findViewById(R.id.drawer_layout);
+        mHandler = new MyHandler(this);
+        utils = new ActivityUtils(this);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mFragmentManager = getSupportFragmentManager();
@@ -69,6 +122,21 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         mToggle.syncState();
         initHeaderView();
         initUserViews();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                cacheSize = FileUtils.getDirSize(getCacheDir());
+                if (Environment.getExternalStorageState().equals(//getCacheDir()内部缓存目录(api>=24) getExternalCacheDir SDcard外部关联目录
+                        Environment.MEDIA_MOUNTED)) {
+                    Size = FileUtils.getDirSize(getExternalCacheDir());
+
+                    Log.i("Zcomic", "run: --------------------------" + cacheSize + Size);
+
+                }
+            }
+        }).start();
     }
 
     private void initHeaderView() {
@@ -78,7 +146,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         user_photo = view.findViewById(R.id.user_photo);
     }
 
-    @Override
     protected void initListener() {
         mNavView.setNavigationItemSelectedListener(this);
         mNavView.setItemIconTintList(null);
@@ -94,29 +161,20 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
             }
         });
+        mToolbar.setOnMenuItemClickListener(this);
     }
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
         switch (item.getItemId()) {
-            case R.id.nav_main:
+            case R.id.nav_classify:
                 hideAllFragment(fragmentTransaction);
-                if (mMainFragment == null) {
-                    mMainFragment = new MainFragment();
-                    fragmentTransaction.add(R.id.fl_layout, mMainFragment);
+                if (mClassifyFragment == null) {
+                    mClassifyFragment = new ClassifyFragment();
+                    fragmentTransaction.add(R.id.fl_layout, mClassifyFragment);
                 } else {
-                    fragmentTransaction.show(mMainFragment);
-                }
-                getSupportActionBar().setTitle("漫画阅读");
-                break;
-            case R.id.nav_category:
-                hideAllFragment(fragmentTransaction);
-                if (mCategoryFragment == null) {
-                    mCategoryFragment = new CategoryFragment();
-                    fragmentTransaction.add(R.id.fl_layout, mCategoryFragment);
-                } else {
-                    fragmentTransaction.show(mCategoryFragment);
+                    fragmentTransaction.show(mClassifyFragment);
                 }
                 getSupportActionBar().setTitle("分类漫画");
                 break;
@@ -130,28 +188,58 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 }
                 getSupportActionBar().setTitle("热门漫画");
                 break;
-            case R.id.nav_search:
+            case R.id.nav_news:
                 hideAllFragment(fragmentTransaction);
-                if (mSearchFragment == null) {
-                    mSearchFragment = new SearchFragment();
-                    fragmentTransaction.add(R.id.fl_layout, mSearchFragment);
+                if (mNewsFragment == null) {
+                    mNewsFragment = new NewsFragment();
+                    fragmentTransaction.add(R.id.fl_layout, mNewsFragment);
                 } else {
-                    fragmentTransaction.show(mSearchFragment);
+                    fragmentTransaction.show(mNewsFragment);
                 }
-                getSupportActionBar().setTitle("搜索漫画");
+                getSupportActionBar().setTitle("漫画资讯");
                 break;
-            case R.id.setting:
-                SettingFragment settingFragment = new SettingFragment();
-                android.app.FragmentManager fragmentManager = getFragmentManager();
-                android.app.FragmentTransaction transaction = fragmentManager.beginTransaction();
-                transaction.add(R.id.fl_layout, settingFragment);
-                transaction.commit();
+            case R.id.nav_update:
+                hideAllFragment(fragmentTransaction);
+                if (mUpdateFragment == null) {
+                    mUpdateFragment = new UpdateFragment();
+                    fragmentTransaction.add(R.id.fl_layout, mUpdateFragment);
+                } else {
+                    fragmentTransaction.show(mUpdateFragment);
+                }
+                getSupportActionBar().setTitle("更新预告");
                 break;
-            case R.id.theme:
+            case R.id.nav_collect:
+                hideAllFragment(fragmentTransaction);
+                if (mCollectionFragment == null) {
+                    mCollectionFragment = new CollectionFragment();
+                    fragmentTransaction.add(R.id.fl_layout, mCollectionFragment);
+                } else {
+                    fragmentTransaction.show(mCollectionFragment);
+                }
+                getSupportActionBar().setTitle("我的收藏");
+                break;
 
+            case R.id.nav_clear_cache:
+                clearCaches();
                 break;
-            case R.id.about:
+            case R.id.nav_version_update:
+//                VersionUtils.versionUpdate(MainActivity.this,);
+                break;
+            case R.id.nav_change_theme:
+                alertChangeTheme();
+                break;
+            case R.id.nav_day_night:
 
+                if (SharedPreUtils.getInt(this,"theme_id", R.style.AppTheme) != R.style.AppTheme_Night) {
+                    changeTheme(9);
+                } else {
+                    Intent intent = getIntent();
+                    SharedPreUtils.putInt(this,"theme_id", R.style.AppTheme);
+                    overridePendingTransition(R.anim.design_snackbar_in, R.anim.design_snackbar_out);
+                    finish();
+                    overridePendingTransition(R.anim.design_snackbar_in, R.anim.design_snackbar_out);
+                    startActivity(intent);
+                }
                 break;
         }
         mDrawerLayout.closeDrawer(GravityCompat.START);
@@ -159,18 +247,77 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         return true;
     }
 
-    private void hideAllFragment(FragmentTransaction fragmentTransaction) {
-        if (mMainFragment != null) {
-            fragmentTransaction.hide(mMainFragment);
+    private void clearCaches() {
+
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        if ("0.000B".equals(Size) || Size.isEmpty() || Size.length() == 0) {
+            dialog.setTitle("确定要清除缓存？").setMessage("缓存大小:" + Size).setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    new Thread(new Runnable() {
+                        @RequiresApi(api = Build.VERSION_CODES.N)
+                        @Override
+                        public void run() {
+                            FileUtils.deleteDir(getCacheDir());
+                            if (Environment.getExternalStorageDirectory().equals(Environment.MEDIA_MOUNTED)) {
+                                FileUtils.deleteDir(getExternalCacheDir());
+                            }
+                            mHandler.sendEmptyMessage(SUCCESS);
+                        }
+                    }).start();
+                }
+            }).setNegativeButton("取消", null).show();
+        } else {
+            dialog.setTitle("确定要清除缓存？").setMessage("内部缓存:" + cacheSize).setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    new Thread(new Runnable() {
+                        @RequiresApi(api = Build.VERSION_CODES.N)
+                        @Override
+                        public void run() {
+                            FileUtils.deleteDir(getCacheDir());
+                            FileUtils.deleteFile(getCacheDir());
+                            if (Environment.getExternalStorageDirectory().equals(Environment.MEDIA_MOUNTED)) {
+                                FileUtils.deleteDir(getExternalCacheDir());
+                                FileUtils.deleteFile(getExternalCacheDir());
+                            }
+                            mHandler.sendEmptyMessage(SUCCESS);
+                        }
+                    }).start();
+                }
+            }).setNegativeButton("取消", null).show();
         }
-        if (mCategoryFragment != null) {
-            fragmentTransaction.hide(mCategoryFragment);
+
+    }
+    private void alertChangeTheme() {
+        View view = View.inflate(MainActivity.this, R.layout.item_change_theme, null);
+        builder = new AlertDialog.Builder(this);
+        builder.setView(view).show();
+        view.findViewById(R.id.tv_red).setOnClickListener(this);
+        view.findViewById(R.id.tv_green).setOnClickListener(this);
+        view.findViewById(R.id.tv_blue).setOnClickListener(this);
+        view.findViewById(R.id.tv_orange).setOnClickListener(this);
+        view.findViewById(R.id.tv_pink).setOnClickListener(this);
+        view.findViewById(R.id.tv_sky).setOnClickListener(this);
+        view.findViewById(R.id.tv_purple).setOnClickListener(this);
+        view.findViewById(R.id.tv_pp).setOnClickListener(this);
+        view.findViewById(R.id.tv_yellow).setOnClickListener(this);
+    }
+    private void hideAllFragment(FragmentTransaction fragmentTransaction) {
+        if (mNewsFragment != null) {
+            fragmentTransaction.hide(mNewsFragment);
+        }
+        if (mClassifyFragment != null) {
+            fragmentTransaction.hide(mClassifyFragment);
         }
         if (mHotFragment != null) {
             fragmentTransaction.hide(mHotFragment);
         }
-        if (mSearchFragment != null) {
-            fragmentTransaction.hide(mSearchFragment);
+        if (mUpdateFragment != null) {
+            fragmentTransaction.hide(mUpdateFragment);
+        }
+        if (mCollectionFragment != null) {
+            fragmentTransaction.hide(mCollectionFragment);
         }
     }
 
@@ -199,5 +346,68 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             user_email.setVisibility(View.VISIBLE);
             user_email.setText(AppUser.getCurrentUser().getEmail());
         }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.tv_sky:
+                changeTheme(0);
+                break;
+            case R.id.tv_blue:
+                changeTheme(1);
+                break;
+            case R.id.tv_green:
+                changeTheme(2);
+                break;
+            case R.id.tv_orange:
+                changeTheme(3);
+                break;
+            case R.id.tv_pink:
+                changeTheme(4);
+                break;
+            case R.id.tv_red:
+                changeTheme(5);
+                break;
+            case R.id.tv_purple:
+                changeTheme(6);
+                break;
+            case R.id.tv_pp:
+                changeTheme(7);
+                break;
+            case R.id.tv_yellow:
+                changeTheme(8);
+                break;
+        }
+    }
+
+    private void changeTheme(int index) {
+        int[] themes = new int[]{R.style.AppTheme, R.style.AppTheme_Blue, R.style.AppTheme_Green,
+                R.style.AppTheme_Orange, R.style.AppTheme_Pink, R.style.AppTheme_Red,
+                R.style.AppTheme_Purple, R.style.AppTheme_PP, R.style.AppTheme_Yellow,
+                R.style.AppTheme_Night};
+        SharedPreUtils.putInt(this,"theme_id", themes[index]);
+        Intent intent = getIntent();
+        overridePendingTransition(R.anim.abc_popup_enter, R.anim.abc_popup_exit);
+        finish();
+        overridePendingTransition(R.anim.abc_fade_in, R.anim.abc_fade_out);
+        startActivity(intent);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_toolbar, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.toolbar_menu_search:
+                Intent mIntent = new Intent(MainActivity.this, SearchActivity.class);
+                startActivity(mIntent);
+                break;
+        }
+        return false;
     }
 }

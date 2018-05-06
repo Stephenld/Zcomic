@@ -1,6 +1,7 @@
 package ldh.com.zcomic.ui;
 
 import android.content.Intent;
+import android.support.v7.widget.Toolbar;
 import android.text.Selection;
 import android.text.Spannable;
 import android.text.method.HideReturnsTransformationMethod;
@@ -45,6 +46,8 @@ public class LoginActivity extends BaseActivity {
     TextView forgetPasswdTv;
     @BindView(R.id.register_btn)
     TextView registerBtn;
+    @BindView(R.id.toolbar_login)
+    Toolbar toolbarLogin;
     // 登录信息
     private String emailAddressStr;
     private String passwordStr;
@@ -61,8 +64,10 @@ public class LoginActivity extends BaseActivity {
     protected int setLayoutResID() {
         return R.layout.login_activity;
     }
+    @Override
     protected void initView() {
-       getSupportActionBar().setTitle("用户登录");
+         setSupportActionBar(toolbarLogin);   // 这一步要加上，很关键，否则getSupportActionBar().setTitle等会报空指针异常
+         getSupportActionBar().setTitle("用户登录");
     }
     @Override
     protected void initListener() {

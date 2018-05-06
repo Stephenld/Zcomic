@@ -2,45 +2,47 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_main"
-            android:icon="@drawable/main_icon"
+            android:id="@+id/nav_classify"
+            android:icon="@drawable/nav_classify"
             android:checked="true"
-            android:textColor="@drawable/item_nav_selector_text"
-            android:title="主页面"/>
-        <item
-            android:id="@+id/nav_category"
-            android:icon="@drawable/category_icon"
-            android:textColor="@drawable/item_nav_selector_text"
             android:title="分类"/>
         <item
             android:id="@+id/nav_hot"
-            android:icon="@drawable/hot_icon"
-            android:textColor="@drawable/item_nav_selector_text"
+            android:icon="@drawable/nav_hot"
             android:title="热门"/>
         <item
-            android:id="@+id/nav_search"
-            android:icon="@drawable/search_icon"
-            android:textColor="@drawable/item_nav_selector_text"
-            android:title="搜索"/>
+            android:id="@+id/nav_news"
+            android:icon="@drawable/nav_news"
+            android:title="资讯"/>
+        <item
+            android:id="@+id/nav_update"
+            android:icon="@drawable/nav_update"
+            android:title="更新"/>
+        <item
+            android:id="@+id/nav_collect"
+            android:icon="@drawable/nav_collect"
+            android:title="收藏"/>
     </group>
 
     <item android:title="附加">
         <menu>
             <item
-                android:id="@+id/setting"
-                android:icon="@drawable/setting_icon"
-                android:textColor="@drawable/item_nav_selector_text"
-                android:title="设置"/>
+                android:id="@+id/nav_clear_cache"
+                android:icon="@drawable/nav_clear_cache"
+                android:title="清理缓存" />
             <item
-                android:id="@+id/theme"
-                android:icon="@drawable/ic_color_lens_black_24dp"
-                android:textColor="@drawable/item_nav_selector_text"
-                android:title="主题"/>
+                android:id="@+id/nav_version_update"
+                android:icon="@drawable/ic_version_update"
+                android:title="版本更新" />
             <item
-                android:id="@+id/about"
-                android:icon="@drawable/about_icon"
-                android:textColor="@drawable/item_nav_selector_text"
-                android:title="关于"/>
+                android:id="@+id/nav_change_theme"
+                android:icon="@drawable/change_theme"
+                android:title="更换主题" />
+            <item
+                android:icon="@drawable/ic_night"
+                android:id="@+id/nav_day_night"
+                android:title="切换夜间"
+                />
         </menu>
     </item>
 </menu>

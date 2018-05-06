@@ -13,6 +13,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.support.v7.widget.Toolbar;
 
 import butterknife.BindView;
 import cn.bmob.v3.exception.BmobException;
@@ -48,6 +49,8 @@ public class RegisterActivity extends BaseActivity {
     ImageView passwordEyeImv;
     @BindView(R.id.register_btn)
     Button registerBtn;
+    @BindView(R.id.toolbar_register)
+    Toolbar toolbarRegister;
     // 注册信息
     private String nickNameStr;
     private String emailAddressStr;
@@ -66,8 +69,10 @@ public class RegisterActivity extends BaseActivity {
         return R.layout.register_activity;
     }
     protected void initView() {
+        setSupportActionBar(toolbarRegister);
         getSupportActionBar().setTitle("免费注册");
     }
+
     @Override
     protected void initListener() {
         userRegister();  // 用户注册

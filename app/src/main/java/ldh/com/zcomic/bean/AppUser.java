@@ -1,4 +1,4 @@
-package ldh.com.zcomic.beans;
+package ldh.com.zcomic.bean;
 
 import cn.bmob.v3.BmobUser;
 

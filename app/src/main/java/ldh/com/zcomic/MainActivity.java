@@ -33,7 +33,7 @@ import java.lang.ref.WeakReference;
 
 import butterknife.BindView;
 import de.hdodenhof.circleimageview.CircleImageView;
-import ldh.com.zcomic.beans.AppUser;
+import ldh.com.zcomic.bean.AppUser;
 import ldh.com.zcomic.fragment.ClassifyFragment;
 import ldh.com.zcomic.fragment.CollectionFragment;
 import ldh.com.zcomic.fragment.HotFragment;

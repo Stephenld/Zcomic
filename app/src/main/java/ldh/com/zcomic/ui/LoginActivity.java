@@ -20,7 +20,7 @@ import cn.bmob.v3.listener.SaveListener;
 import ldh.com.zcomic.MainActivity;
 import ldh.com.zcomic.R;
 import ldh.com.zcomic.base.BaseActivity;
-import ldh.com.zcomic.beans.AppUser;
+import ldh.com.zcomic.bean.AppUser;
 
 /**
  * Created by allen liu on 2018/5/3.

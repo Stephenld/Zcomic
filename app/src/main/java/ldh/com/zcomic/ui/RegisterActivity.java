@@ -20,7 +20,7 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
 import ldh.com.zcomic.R;
 import ldh.com.zcomic.base.BaseActivity;
-import ldh.com.zcomic.beans.AppUser;
+import ldh.com.zcomic.bean.AppUser;
 
 public class RegisterActivity extends BaseActivity {
     private static final String LOG_MSG = "RegisterActivity";

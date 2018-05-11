@@ -149,7 +149,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="22dp"
             android:layout_toRightOf="@id/register_btn"
-            android:layout_marginLeft="230dp"
+            android:layout_marginLeft="210dp"
             android:text="忘记密码？"
             android:textColor="@color/text_black6"
             android:textSize="15sp" />

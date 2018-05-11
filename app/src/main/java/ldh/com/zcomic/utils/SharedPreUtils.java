@@ -3,6 +3,9 @@ package ldh.com.zcomic.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 public class SharedPreUtils {
 
     private static String USER_SETTING = "settingFragment";
@@ -122,6 +125,45 @@ public class SharedPreUtils {
         if (editor != null) {
             editor.putString("theme", theme);
             editor.commit();
+        }
+    }
+
+    /**
+     * 保存String数组
+     */
+    public static void saveStringArray(Context mContext, String key, String[] strs) {
+        SharedPreferences sp = null;
+        if (sp == null) {
+            sp = mContext.getSharedPreferences("config", Context.MODE_PRIVATE);
+            sp.edit().remove(key);
+        }
+        JSONArray jSONArray = new JSONArray();
+        for (String s : strs) {
+            jSONArray.put(s);
+        }
+        sp.edit().putString(key, jSONArray.toString()).commit();
+    }
+
+    /**
+     * 读取String数组
+     */
+
+    public static String[] getStringArray(Context mContext, String key) {
+        SharedPreferences sp = null;
+        String[] strs;
+        if (sp == null) {
+            sp = mContext.getSharedPreferences("config", Context.MODE_PRIVATE);
+        }
+        try {
+            JSONArray jSONArray = new JSONArray(sp.getString(key, "[]"));
+            strs = new String[jSONArray.length()];
+            for (int i = 0; i < jSONArray.length(); i++) {
+                strs[i] = jSONArray.getString(i);
+            }
+            return strs;
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 }

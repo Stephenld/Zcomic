@@ -77,9 +77,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     class MyHandler extends Handler {
         WeakReference<MainActivity> mainActivity;
+
         public MyHandler(MainActivity activity) {
             mainActivity = new WeakReference(activity);
         }
+
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
@@ -97,11 +99,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        int theme_id = SharedPreUtils.getInt(this,"theme_id", R.style.AppTheme);
+        int theme_id = SharedPreUtils.getInt(this, "theme_id", R.style.AppTheme);
         setTheme(theme_id);
         setContentView(R.layout.activity_main);
+        initData();
         initView();
         initListener();
+    }
+
+    private void initData() {
+        mFragmentManager = getSupportFragmentManager();
+        if (mClassifyFragment == null) {
+            mClassifyFragment = new ClassifyFragment();
+            FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+            fragmentTransaction.add(R.id.fl_layout, mClassifyFragment);
+            fragmentTransaction.commit();
+//            getSupportActionBar().setTitle("分类漫画");
+        }
     }
 
     protected void initView() {
@@ -230,11 +244,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.nav_day_night:
 
-                if (SharedPreUtils.getInt(this,"theme_id", R.style.AppTheme) != R.style.AppTheme_Night) {
+                if (SharedPreUtils.getInt(this, "theme_id", R.style.AppTheme) != R.style.AppTheme_Night) {
                     changeTheme(9);
                 } else {
                     Intent intent = getIntent();
-                    SharedPreUtils.putInt(this,"theme_id", R.style.AppTheme);
+                    SharedPreUtils.putInt(this, "theme_id", R.style.AppTheme);
                     overridePendingTransition(R.anim.design_snackbar_in, R.anim.design_snackbar_out);
                     finish();
                     overridePendingTransition(R.anim.design_snackbar_in, R.anim.design_snackbar_out);
@@ -250,7 +264,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void clearCaches() {
 
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-        if ("0.000B".equals(Size) || Size.isEmpty() || Size.length() == 0) {
+        if ("0.00B".equals(Size) || Size.isEmpty() || Size.length() == 0) {
             dialog.setTitle("确定要清除缓存？").setMessage("缓存大小:" + Size).setPositiveButton("确定", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -289,6 +303,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
     }
+
     private void alertChangeTheme() {
         View view = View.inflate(MainActivity.this, R.layout.item_change_theme, null);
         builder = new AlertDialog.Builder(this);
@@ -303,6 +318,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         view.findViewById(R.id.tv_pp).setOnClickListener(this);
         view.findViewById(R.id.tv_yellow).setOnClickListener(this);
     }
+
     private void hideAllFragment(FragmentTransaction fragmentTransaction) {
         if (mNewsFragment != null) {
             fragmentTransaction.hide(mNewsFragment);
@@ -386,7 +402,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 R.style.AppTheme_Orange, R.style.AppTheme_Pink, R.style.AppTheme_Red,
                 R.style.AppTheme_Purple, R.style.AppTheme_PP, R.style.AppTheme_Yellow,
                 R.style.AppTheme_Night};
-        SharedPreUtils.putInt(this,"theme_id", themes[index]);
+        SharedPreUtils.putInt(this, "theme_id", themes[index]);
         Intent intent = getIntent();
         overridePendingTransition(R.anim.abc_popup_enter, R.anim.abc_popup_exit);
         finish();
@@ -409,5 +425,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
         }
         return false;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == 789) {
+            Bundle bundle = data.getExtras();
+            int tabPosition = bundle.getInt("NewTabPostion");
+            mClassifyFragment.setCurrentChannel(tabPosition);
+            mClassifyFragment.notifyChannelChange();
+        }
     }
 }

@@ -15,7 +15,7 @@ public class ComicItem {
     private String summary;
     private boolean isCollected;
     private String updates;
-    private List<Chapter> mEpisodeList;
+    private List<Chapter> mChapterList;
 
     public String getImgUrl() {
         return imgUrl;
@@ -81,11 +81,11 @@ public class ComicItem {
         this.updates = updates;
     }
 
-    public List<Chapter> getmEpisodeList() {
-        return mEpisodeList;
+    public List<Chapter> getmChapterList() {
+        return mChapterList;
     }
 
-    public void setmEpisodeList(List<Chapter> mEpisodeList) {
-        this.mEpisodeList = mEpisodeList;
+    public void setmChapterList(List<Chapter> mEpisodeList) {
+        this.mChapterList = mEpisodeList;
     }
 }

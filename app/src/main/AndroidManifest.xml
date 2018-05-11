@@ -30,10 +30,12 @@
             </intent-filter>
         </activity>
         <activity android:name=".MainActivity" android:theme="@style/TTheme"/>
-        <activity android:name=".ui.LoginActivity"  />
+        <activity android:name=".ui.LoginActivity"/>
         <activity android:name=".ui.RegisterActivity"/>
         <activity android:name=".ui.ResetPasswordActivity"/>
         <activity android:name=".ui.SearchActivity"/>
+        <activity android:name=".ui.ComicItemActivity"/>
+        <activity android:name=".ui.ChannelManagerActivity"/>
     </application>
 
 </manifest>

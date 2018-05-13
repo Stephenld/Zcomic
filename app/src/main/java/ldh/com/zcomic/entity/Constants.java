@@ -33,6 +33,10 @@ public class Constants {
     public static String COMIC_JAPAN ="http://ac.qq.com/Comic/all/state/pink/nation/4/search/hot/page/";
     // 漫画资讯
     public static String COMIC_NEWS = "http://comic.qq.com/";
+    // 轮播图
+    public static String COMIC_BANNER = "http://comic.sina.com.cn/";
+    // 八卦杂谈
+    public static String COMIC_Extra = "http://comic.qq.com/view/";
     // 最近更新
     public static String COMIC_UPDATE = "http://ac.qq.com/Light";
     // 漫画搜索

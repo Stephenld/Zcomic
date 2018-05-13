@@ -3,7 +3,7 @@ package ldh.com.zcomic.fragment;
 import android.content.Intent;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import java.io.UnsupportedEncodingException;
@@ -13,8 +13,7 @@ import java.util.List;
 import butterknife.BindView;
 import ldh.com.zcomic.R;
 import ldh.com.zcomic.adapter.BasePagerAdapter;
-import ldh.com.zcomic.adapter.ComicHotPagerAdapter;
-import ldh.com.zcomic.adapter.ComicLoadMoreAdapter;
+import ldh.com.zcomic.adapter.ComicNewsPagerAdapter;
 import ldh.com.zcomic.base.BaseFragment;
 import ldh.com.zcomic.bean.ComicBean;
 import ldh.com.zcomic.entity.Constants;
@@ -25,45 +24,42 @@ import ldh.com.zcomic.utils.OkHttpUtil;
 import okhttp3.Call;
 
 /**
- * Created by allen liu on 2018/5/2.
+ * Created by allen liu on 2018/5/13.
  */
 
-public class HotFragment extends BaseFragment implements ComicLoadMoreAdapter.OnLoadMoreDataRv{
-    @BindView(R.id.hot_pager_fresh)
-    SwipeRefreshLayout mSrHot;
-    @BindView(R.id.hot_comic_rc)
-    RecyclerView mRvHot;
-    private int mPageNum = 0;
+public class NewsExtraPagerFragment extends BaseFragment {
+    @BindView(R.id.news_pager_fresh)
+    SwipeRefreshLayout mSrNews;
+    @BindView(R.id.news_comic_rc)
+    RecyclerView mRvNews;
     private List<ComicBean> mList;
-    private ComicHotPagerAdapter mHotAdapter;
-    private ComicLoadMoreAdapter mMoreAdapter;
+    private ComicNewsPagerAdapter mNewsAdapter;
 
     @Override
     protected int getResRootViewId() {
-        return R.layout.fragment_hot;
+        return R.layout.newspager_fragment;
     }
+
     @Override
     protected void initData() {
         mList = new ArrayList<>();
-        mHotAdapter = new ComicHotPagerAdapter();
-        mMoreAdapter = new ComicLoadMoreAdapter(mHotAdapter, this);
-        mMoreAdapter.updateData(mList);
-        mRvHot.setLayoutManager(new GridLayoutManager(getContext(), 2));
-        mRvHot.setItemAnimator(new DefaultItemAnimator());
-        mRvHot.setAdapter(mMoreAdapter);
+        mNewsAdapter = new ComicNewsPagerAdapter();
+        getClassifyComic();
+        mRvNews.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
+        mRvNews.setItemAnimator(new DefaultItemAnimator());
+        mRvNews.setAdapter(mNewsAdapter);
     }
 
     @Override
     protected void initListener() {
-        mSrHot.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        mSrNews.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mSrHot.setRefreshing(true);
-                mPageNum = 1;
-                getClassifyComic(mPageNum);
+                mSrNews.setRefreshing(true);
+                getClassifyComic();
             }
         });
-        mHotAdapter.setOnRecyclerViewListener(new BasePagerAdapter.OnClickRecyclerViewListener() {
+        mNewsAdapter.setOnRecyclerViewListener(new BasePagerAdapter.OnClickRecyclerViewListener() {
             @Override
             public void onItemClick(int position) {
                 Intent intent = new Intent(getActivity(), ComicItemActivity.class);
@@ -77,13 +73,9 @@ public class HotFragment extends BaseFragment implements ComicLoadMoreAdapter.On
             }
         });
     }
-    @Override
-    public void loadMoreData() {
-        mPageNum++;
-        getClassifyComic(mPageNum);
-    }
-    private void getClassifyComic(int mPageNum) {
-        String url= Constants.COMIC_JAPAN+mPageNum;
+
+    private void getClassifyComic() {
+        String url= Constants.COMIC_Extra;
         OkHttpUtil.getInstance().getAsync(url, new OkHttpResultCallback() {
             @Override
             public void onError(Call call, Exception e) {
@@ -93,8 +85,8 @@ public class HotFragment extends BaseFragment implements ComicLoadMoreAdapter.On
             @Override
             public void onResponse(byte[] bytes) {
                 try {
-                    String s = new String(bytes, "utf-8");
-                    List<ComicBean> list = JsoupUtils.getInstance().getComicHotData(s);
+                    String s = new String(bytes, "GBK");
+                    List<ComicBean> list = JsoupUtils.getInstance().getComicExtraData(s);
                     getCategoryComicSuccess(list);
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
@@ -103,20 +95,10 @@ public class HotFragment extends BaseFragment implements ComicLoadMoreAdapter.On
         });
     }
     private void getCategoryComicSuccess(List<ComicBean> list) {
-        if (mSrHot != null && mSrHot.isRefreshing()){
-            mSrHot.setRefreshing(false);
+        if (mSrNews != null && mSrNews.isRefreshing()){
+            mSrNews.setRefreshing(false);
         }
-        if (list == null || list.size() == 0){
-            mMoreAdapter.setHasMoreData(false);
-        }else {
-            if (mPageNum == 1){
-                mList = list;
-                mHotAdapter.updateData(mList);
-            }else {
-                mList.addAll(list);
-                mHotAdapter.appendData(list);
-            }
-        }
-        mMoreAdapter.notifyDataSetChanged();
+        mList = list;
+        mNewsAdapter.updateData(mList);
     }
 }

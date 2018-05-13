@@ -38,7 +38,6 @@ import ldh.com.zcomic.fragment.ClassifyFragment;
 import ldh.com.zcomic.fragment.CollectionFragment;
 import ldh.com.zcomic.fragment.HotFragment;
 import ldh.com.zcomic.fragment.NewsFragment;
-import ldh.com.zcomic.fragment.UpdateFragment;
 import ldh.com.zcomic.ui.LoginActivity;
 import ldh.com.zcomic.ui.SearchActivity;
 import ldh.com.zcomic.utils.ActivityUtils;
@@ -59,7 +58,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ClassifyFragment mClassifyFragment;
     private HotFragment mHotFragment;
     private CollectionFragment mCollectionFragment;
-    private UpdateFragment mUpdateFragment;
     private FragmentManager mFragmentManager;
     private TextView user_name, user_email;
     private CircleImageView user_photo;
@@ -212,16 +210,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
                 getSupportActionBar().setTitle("漫画资讯");
                 break;
-            case R.id.nav_update:
-                hideAllFragment(fragmentTransaction);
-                if (mUpdateFragment == null) {
-                    mUpdateFragment = new UpdateFragment();
-                    fragmentTransaction.add(R.id.fl_layout, mUpdateFragment);
-                } else {
-                    fragmentTransaction.show(mUpdateFragment);
-                }
-                getSupportActionBar().setTitle("更新预告");
-                break;
             case R.id.nav_collect:
                 hideAllFragment(fragmentTransaction);
                 if (mCollectionFragment == null) {
@@ -328,9 +316,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         if (mHotFragment != null) {
             fragmentTransaction.hide(mHotFragment);
-        }
-        if (mUpdateFragment != null) {
-            fragmentTransaction.hide(mUpdateFragment);
         }
         if (mCollectionFragment != null) {
             fragmentTransaction.hide(mCollectionFragment);

@@ -98,5 +98,8 @@
     <color name="middle_transparent_text">#55000000</color>
     <color name="tab_gray">#f3f3f3</color>
     <color name="textColorBlack">#313131</color>
+
+    <color name="color_search_bg">#E5E5E5</color>
+    <color name="color_search_text">#838B83</color>
 </resources>
 

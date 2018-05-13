@@ -15,16 +15,12 @@
             android:icon="@drawable/nav_news"
             android:title="资讯"/>
         <item
-            android:id="@+id/nav_update"
-            android:icon="@drawable/nav_update"
-            android:title="更新"/>
-        <item
             android:id="@+id/nav_collect"
             android:icon="@drawable/nav_collect"
             android:title="收藏"/>
     </group>
 
-    <item android:title="附加">
+    <item android:title="设置">
         <menu>
             <item
                 android:id="@+id/nav_clear_cache"

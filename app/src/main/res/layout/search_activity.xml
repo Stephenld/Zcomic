@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:fitsSystemWindows="true"
+              android:orientation="vertical">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+                <ImageButton
+                    android:id="@+id/ib_search"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:src="@drawable/icon_search"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:padding="10dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:scaleType="fitCenter"/>
+
+                <ldh.com.zcomic.view.EditTextWithDel
+                    android:id="@+id/et_search"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:layout_toLeftOf="@+id/ib_search"
+                    android:background="@drawable/bg_search"
+                    android:drawableLeft="@drawable/iv_search"
+                    android:drawableStart="@drawable/iv_search"
+                    android:drawablePadding="6dp"
+                    android:drawableEnd="@drawable/iv_delete"
+                    android:drawableRight="@drawable/iv_delete"
+                    android:hint="请输入漫画名称"
+                    android:layout_centerVertical="true"
+                    android:paddingEnd="9dp"
+                    android:paddingStart="9dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="10dp"
+                    android:lines="1"
+                    android:textColor="@color/black"
+                    android:textCursorDrawable="@null"
+                    android:textSize="15sp"
+                    android:completionThreshold="1"/>
+
+        </RelativeLayout>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/search_rv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+        <ProgressBar
+            android:visibility="gone"
+            android:id="@+id/search_pb"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center_horizontal|center_vertical"
+            />
+</LinearLayout>

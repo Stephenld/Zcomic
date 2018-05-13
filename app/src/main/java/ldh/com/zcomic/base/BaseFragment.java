@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+
 import butterknife.ButterKnife;
 
 /**
@@ -32,12 +34,13 @@ public abstract class BaseFragment extends Fragment {
 //      mContext = this.getContext() ;
 //        initData(getArguments());
         ButterKnife.bind(this,mView); // 不能漏写，不然后面会报空指针异常
+        Fresco.initialize(getActivity());
         initData();
         initListener();
         return mView ;
     }
 //    protected abstract void initData(Bundle arguments);
-    protected abstract void initData();
     protected abstract int getResRootViewId() ;
+    protected abstract void initData();
     protected abstract void initListener();
 }

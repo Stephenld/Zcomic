@@ -83,7 +83,7 @@ public class JsoupUtils {
     public List<ComicBean> getComicHotData(String s) {
         List<ComicBean> hotlists = new ArrayList<>();
         Document doc = Jsoup.parse(s);
-        Element element = doc.select("ul.ret-search-result").first();
+        Element element = doc.select("ul.ret-search-list").first();
         Elements elements = element.getElementsByTag("li");
         for (Element e : elements) {
             ComicBean bean = new ComicBean();
@@ -97,9 +97,11 @@ public class JsoupUtils {
             Element eeN = eeM.select("span.mod-cover-list-text").first();
             bean.setCurrent(eeN.text());
             Element e2 = e.select("div.ret-works-info").first();
-            Element e3 = e2.getElementsByTag("p").first();
-            Element e4 = e3.select("em").get(1);
-            bean.setDesc(e4.text());
+            Element e3 = e2.select("p.ret-works-tags").first();
+            Element e4 = e3.select("em").get(0);
+//            Element e2 = doc.getElementsByAttributeValue("class","ret-works-tags").get(0); //不行，一页所有item都是相同人气值
+//            Element e3 = e2.select("em").get(0);
+            bean.setPopularity(e4.text());
             hotlists.add(bean);
         }
         return hotlists;
@@ -110,37 +112,186 @@ public class JsoupUtils {
     public List<ComicBean> getComicNewsData(String s) {
         List<ComicBean> newslists = new ArrayList<>();
         Document doc = Jsoup.parse(s);
-        List<Element> detail = doc.getElementsByAttributeValue("class","Q-tpList");
-        for (int i=0;i<detail.size();i++) {
+        Element es = doc.select("div#tabs-1").first();
+        Elements ess = es.select("div.Q-tpList");
+        for (Element ee : ess) {
             ComicBean bean = new ComicBean();
-            bean.setContentUrl(detail.get(i).select("a").attr("href"));
-            bean.setImgUrl(detail.get(i).getElementsByTag("a").select("img").attr("data-original"));
-            bean.setTitle(detail.get(i).getElementsByTag("h3").select("a").attr("title"));
-            bean.setDesc(detail.get(i).select("123").get(0).text());
-            bean.setCurrent(detail.get(i).select("div.newsinfo").select("div.cf").select("div.fl").get(0).text());
+            Element e1= ee.getElementsByTag("a").first();
+            bean.setContentUrl(e1.attr("href"));
+            Element e2 = ee.getElementsByTag("img").first();
+            String e3 = e2.attr("src");
+            bean.setImgUrl(e3);
+            Element e4 = ee.select("h3.f18").first();
+            Element ee4 = e4.getElementsByTag("a").first();
+            String e5 = ee4.attr("title");
+            bean.setTitle(e5);
+            Element e6 = ee.getElementsByTag("p").first();
+            bean.setDesc(e6.text());
+            Element e7 = ee.select("div.newsinfo").first();
+            Element e8 =e7.select("span").get(0);
+            bean.setCurrent(e8.text());
             newslists.add(bean);
         }
         return newslists;
     }
 
     /**
-     * 最新更新轻小说
+     * 八卦杂谈
      */
-    public List<ComicBean> getComicUpdateData(String s) {
-        List<ComicBean> updatelists = new ArrayList<>();
+    public List<ComicBean> getComicExtraData(String s) {
+        List<ComicBean> newslists = new ArrayList<>();
         Document doc = Jsoup.parse(s);
-        List<Element> detail = doc.getElementsByAttributeValue("class","update-item");
-        for (int i=0;i<detail.size();i++) {
+        Elements ess = doc.select("div.Q-tpList");
+        for (Element ee : ess) {
             ComicBean bean = new ComicBean();
-            bean.setContentUrl(detail.get(i).select("a").attr("href"));
-            bean.setImgUrl(detail.get(i).getElementsByTag("a").select("img").attr("data-original"));
-            bean.setTitle(detail.get(i).getElementsByTag("h3").select("a").attr("title"));
-            bean.setDesc(detail.get(i).select("123").get(0).text());
-            bean.setCurrent(detail.get(i).select("p").select("a").select("span.update-info-txt").get(0).text());
-            updatelists.add(bean);
+            Element e1= ee.getElementsByTag("a").first();
+            bean.setContentUrl(e1.attr("href"));
+            Element e2 = ee.getElementsByTag("img").first();
+            String e3 = e2.attr("src");
+            bean.setImgUrl(e3);
+            Element e4 = ee.select("h3.f18").first();
+            Element ee4 = e4.getElementsByTag("a").first();
+            String e5 = ee4.attr("title");
+            bean.setTitle(e5);
+            Element e6 = ee.getElementsByTag("p").first();
+            bean.setDesc(e6.text());
+            Element e7 = ee.select("div.newsinfo").first();
+            Element e8 =e7.select("span").get(0);
+            bean.setCurrent(e8.text());
+            newslists.add(bean);
         }
-        return updatelists;
+        return newslists;
     }
+    /**
+     * 轮播图
+     */
+    public List<ComicBean> getComicBannerData(String s) {
+        List<ComicBean> newsBannerLists = new ArrayList<>();
+        Document doc = Jsoup.parse(s);
+        Element es = doc.select("div.lunbo_wrap").first();
+        Elements ess = es.getElementsByTag("li");
+        for (Element ee : ess) {
+            ComicBean bean = new ComicBean();
+            Element e1= ee.getElementsByTag("a").first();
+            bean.setContentUrl(e1.attr("href"));
+            Element e2 = e1.getElementsByTag("img").first();
+            String e3 = e2.attr("src");
+            bean.setImgUrl(e3);
+            Element e4 = ee.select("div.img_direct").first();
+            Element e5 = e4.getElementsByTag("a").first();
+            bean.setTitle(e5.text());
+            newsBannerLists.add(bean);
+        }
+        return newsBannerLists;
+    }
+
+//    /**
+//     * 漫画资讯b ： style display=none 隐藏的数据，不能获取？？
+//     */
+//    public List<ComicBean> getComicNewsDataB(String s) {
+//        List<ComicBean> newslists = new ArrayList<>();
+//        Document doc = Jsoup.parse(s);
+//        Element es = doc.select("div#tabs-2").first();
+//        Elements ess = es.select("div.Q-tpList");
+//        for (Element ee : ess) {
+//            ComicBean bean = new ComicBean();
+//            Element e1= ee.getElementsByTag("a").first();
+//            bean.setContentUrl(e1.attr("href"));
+//            Element e2 = ee.getElementsByTag("img").first();
+//            String e3 = e2.attr("src");
+//            bean.setImgUrl(e3);
+//            Element e4 = ee.select("h3.f18").first();
+//            Element ee4 = e4.getElementsByTag("a").first();
+//            String e5 = ee4.attr("title");
+//            bean.setTitle(e5);
+//            Element e6 = ee.getElementsByTag("p").first();
+//            bean.setDesc(e6.text());
+//            Element e7 = ee.select("div.newsinfo").first();
+//            Element e8 =e7.select("span").get(0);
+//            bean.setCurrent(e8.text());
+//            newslists.add(bean);
+//        }
+//        return newslists;
+//    }
+//    /**
+//     * 漫画资讯c
+//     */
+//    public List<ComicBean> getComicNewsDataC(String s) {
+//        List<ComicBean> newslists = new ArrayList<>();
+//        Document doc = Jsoup.parse(s);
+//        Element es =doc.getElementById("tabs-3");
+//        es.attr("style","display:block");
+////        Element es = doc.select("div#tabs-3").first();
+//        Elements ess = es.select("div.Q-tpList");
+//        for (Element ee : ess) {
+//            ComicBean bean = new ComicBean();
+//            Element e1= ee.getElementsByTag("a").first();
+//            bean.setContentUrl(e1.attr("href"));
+//            Element e2 = ee.getElementsByTag("img").first();
+//            String e3 = e2.attr("src");
+//            bean.setImgUrl(e3);
+//            Element e4 = ee.select("h3.f18").first();
+//            Element ee4 = e4.getElementsByTag("a").first();
+//            String e5 = ee4.attr("title");
+//            bean.setTitle(e5);
+//            Element e6 = ee.getElementsByTag("p").first();
+//            bean.setDesc(e6.text());
+//            Element e7 = ee.select("div.newsinfo").first();
+//            Element e8 =e7.select("span").get(0);
+//            bean.setCurrent(e8.text());
+//            newslists.add(bean);
+//        }
+//        return newslists;
+//    }
+//    /**
+//     * 漫画资讯d
+//     */
+//    public List<ComicBean> getComicNewsDataD(String s) {
+//        List<ComicBean> newslists = new ArrayList<>();
+//        Document doc = Jsoup.parse(s);
+//
+//        Element es = doc.select("div#tabs-4").first();
+//        Elements ess = es.select("div.Q-tpList");
+//        for (Element ee : ess) {
+//            ComicBean bean = new ComicBean();
+//            Element e1= ee.getElementsByTag("a").first();
+//            bean.setContentUrl(e1.attr("href"));
+//            Element e2 = ee.getElementsByTag("img").first();
+//            String e3 = e2.attr("src");
+//            bean.setImgUrl(e3);
+//            Element e4 = ee.select("h3.f18").first();
+//            Element ee4 = e4.getElementsByTag("a").first();
+//            String e5 = ee4.attr("title");
+//            bean.setTitle(e5);
+//            Element e6 = ee.getElementsByTag("p").first();
+//            bean.setDesc(e6.text());
+//            Element e7 = ee.select("div.newsinfo").first();
+//            Element e8 =e7.select("span").get(0);
+//            bean.setCurrent(e8.text());
+//            newslists.add(bean);
+//        }
+//        return newslists;
+//    }
+//
+
+//    /**
+//     * 最新更新轻小说
+//     */
+//    public List<ComicBean> getComicUpdateData(String s) {
+//        List<ComicBean> updatelists = new ArrayList<>();
+//        Document doc = Jsoup.parse(s);
+//        List<Element> detail = doc.getElementsByAttributeValue("class","update-item");
+//        for (int i=0;i<detail.size();i++) {
+//            ComicBean bean = new ComicBean();
+//            bean.setContentUrl(detail.get(i).select("a").attr("href"));
+//            bean.setImgUrl(detail.get(i).getElementsByTag("a").select("img").attr("data-original"));
+//            bean.setTitle(detail.get(i).getElementsByTag("h3").select("a").attr("title"));
+//            bean.setDesc(detail.get(i).select("123").get(0).text());
+//            bean.setCurrent(detail.get(i).select("p").select("a").select("span.update-info-txt").get(0).text());
+//            updatelists.add(bean);
+//        }
+//        return updatelists;
+//    }
 
     /**
      * 漫画详情数据

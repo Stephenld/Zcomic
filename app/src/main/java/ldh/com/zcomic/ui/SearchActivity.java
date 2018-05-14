@@ -1,5 +1,6 @@
 package ldh.com.zcomic.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +21,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import ldh.com.zcomic.R;
+import ldh.com.zcomic.adapter.BasePagerAdapter;
 import ldh.com.zcomic.adapter.ComicPagerAdapter;
 import ldh.com.zcomic.bean.ComicBean;
 import ldh.com.zcomic.entity.Constants;
@@ -50,28 +52,8 @@ public class SearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.search_activity);
         ButterKnife.bind(this);
-        initView();
-        initListener();
     }
-    private void initView() {
 
-    }
-    private void initListener() {
-//        mSearchAdapter.setOnRecyclerViewListener(new BasePagerAdapter.OnClickRecyclerViewListener() {
-//            @Override
-//            public void onItemClick(int position) {
-////                Intent intent = new Intent(this, ComicItemActivity);
-////                intent.putExtra("comicItemUrl",mList.get(position).getContentUrl());
-////                intent.putExtra("comicItemTitle",mList.get(position).getTitle());
-////                startActivity(intent);
-//            }
-//
-//            @Override
-//            public boolean onItemLongClick(int position) {
-//                return false;
-//            }
-//        });
-    }
     @OnClick(R.id.ib_search)
     public void onViewClicked() {
         if (TextUtils.isEmpty(et_search.getText().toString())){
@@ -115,6 +97,22 @@ public class SearchActivity extends AppCompatActivity {
         search_rv.setLayoutManager( new GridLayoutManager(this,3));
         search_rv.setItemAnimator(new DefaultItemAnimator());
         search_rv.setAdapter(mSearchAdapter);
+
+        mSearchAdapter.setOnRecyclerViewListener(new BasePagerAdapter.OnClickRecyclerViewListener() {
+            @Override
+            public void onItemClick(int position) {
+                Intent intent = new Intent(SearchActivity.this,ComicItemActivity.class);
+                String url = mList.get(position).getContentUrl();
+                intent.putExtra("comicItemUrl",url.substring(url.indexOf("/Comic")));
+                intent.putExtra("comicItemTitle",mList.get(position).getTitle());
+                startActivity(intent);
+            }
+
+            @Override
+            public boolean onItemLongClick(int position) {
+                return false;
+            }
+        });
     }
 }
 

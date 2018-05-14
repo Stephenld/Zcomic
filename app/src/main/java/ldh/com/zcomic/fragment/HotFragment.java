@@ -67,7 +67,8 @@ public class HotFragment extends BaseFragment implements ComicLoadMoreAdapter.On
             @Override
             public void onItemClick(int position) {
                 Intent intent = new Intent(getActivity(), ComicItemActivity.class);
-                intent.putExtra("comicItemUrl",mList.get(position).getContentUrl());
+                String url = mList.get(position).getContentUrl();
+                intent.putExtra("comicItemUrl", url.substring(url.indexOf("/Comic")));
                 intent.putExtra("comicItemTitle",mList.get(position).getTitle());
                 startActivity(intent);
             }

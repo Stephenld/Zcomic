@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/Qcomic.iml" filepath="$PROJECT_DIR$/Qcomic.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/channelmanager/channelmanager.iml" filepath="$PROJECT_DIR$/channelmanager/channelmanager.iml" />
-      <module fileurl="file://$PROJECT_DIR$/coocomic.iml" filepath="$PROJECT_DIR$/coocomic.iml" />
     </modules>
   </component>
 </project>

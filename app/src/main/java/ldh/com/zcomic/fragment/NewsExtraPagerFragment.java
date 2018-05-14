@@ -17,7 +17,7 @@ import ldh.com.zcomic.adapter.ComicNewsPagerAdapter;
 import ldh.com.zcomic.base.BaseFragment;
 import ldh.com.zcomic.bean.ComicBean;
 import ldh.com.zcomic.entity.Constants;
-import ldh.com.zcomic.ui.ComicItemActivity;
+import ldh.com.zcomic.ui.ComicPageActivity;
 import ldh.com.zcomic.utils.JsoupUtils;
 import ldh.com.zcomic.utils.OkHttpResultCallback;
 import ldh.com.zcomic.utils.OkHttpUtil;
@@ -62,9 +62,9 @@ public class NewsExtraPagerFragment extends BaseFragment {
         mNewsAdapter.setOnRecyclerViewListener(new BasePagerAdapter.OnClickRecyclerViewListener() {
             @Override
             public void onItemClick(int position) {
-                Intent intent = new Intent(getActivity(), ComicItemActivity.class);
-                intent.putExtra("comicItemUrl",mList.get(position).getContentUrl());
-                intent.putExtra("comicItemTitle",mList.get(position).getTitle());
+                Intent intent = new Intent(getActivity(), ComicPageActivity.class);
+                intent.putExtra("url","http://comic.qq.com"+mList.get(position).getContentUrl());
+                intent.putExtra("title",mList.get(position).getTitle());
                 startActivity(intent);
             }
             @Override

@@ -63,7 +63,7 @@ public class NewsFragment extends BaseFragment {
         mBanner.setDelayTime(3000);
         mBanner.setIndicatorGravity(BannerConfig.RIGHT);
         mBanner.setBannerAnimation(Transformer.DepthPage);
-        getComicBannerComic();
+        getComicBannerData();
 
         mTitleList.add("动漫资讯");
         mTitleList.add("八卦杂谈");
@@ -85,11 +85,13 @@ public class NewsFragment extends BaseFragment {
             @Override
             public void OnBannerClick(int position) {
                 Intent intent = new Intent(getActivity(), ComicPageActivity.class);
-                intent.putExtra("comicItemUrl", comicList.get(position).getContentUrl());
-                intent.putExtra("comicItemTitle", comicList.get(position).getTitle());
+                intent.putExtra("url", comicList.get(position).getContentUrl());
+                intent.putExtra("title", comicList.get(position).getTitle());
                 startActivity(intent);
             }
         });
+
+
     }
     class NewsAdapter extends FragmentPagerAdapter {
         public NewsAdapter(FragmentManager fm) {
@@ -111,7 +113,7 @@ public class NewsFragment extends BaseFragment {
             return mTitleList.size();
         }
     }
-    private void getComicBannerComic() {
+    private void getComicBannerData() {
         String url= Constants.COMIC_BANNER;
         OkHttpUtil.getInstance().getAsync(url, new OkHttpResultCallback() {
             @Override

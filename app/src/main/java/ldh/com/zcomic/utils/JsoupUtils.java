@@ -8,7 +8,7 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.List;
 
-import ldh.com.zcomic.bean.Chapter;
+import ldh.com.zcomic.bean.ChapterBean;
 import ldh.com.zcomic.bean.ComicBean;
 import ldh.com.zcomic.bean.ComicItem;
 
@@ -35,23 +35,26 @@ public class JsoupUtils {
     public List<ComicBean> getComicAllData(String s) {
         List<ComicBean> categorylists = new ArrayList<>();
         Document doc = Jsoup.parse(s);
-        Element element = doc.select("ul.ret-search-list").first();
+        Element element = doc.select("div.ret-search-result").first(); //不用“ui.ret-search-list”,那样范围小，有些栏目会读取空，闪退
         Elements elements = element.getElementsByTag("li");
-        for (Element e : elements) {
-           ComicBean bean = new ComicBean();
-           Element e1 = e.select("div.ret-works-cover").first();
-           Element eI = e1.getElementsByTag("a").first();
-            bean.setTitle(eI.attr("title"));
-            bean.setContentUrl(eI.attr("href"));
-            Element eeI = eI.getElementsByTag("img").first();
-            bean.setImgUrl(eeI.attr("data-original"));
-            Element eeM = e1.getElementsByTag("p").first();
-            Element eeN = eeM.select("span.mod-cover-list-text").first();
-            bean.setCurrent(eeN.text());
-            Element e2 = e.select("p.ret-works-decs").first();
-            bean.setDesc(e2.text());
-            categorylists.add(bean);
+        if (elements != null) {
+            for (Element e : elements) {
+                ComicBean bean = new ComicBean();
+                Element e1 = e.select("div.ret-works-cover").first();
+                Element eI = e1.getElementsByTag("a").first();
+                bean.setTitle(eI.attr("title"));
+                bean.setContentUrl(eI.attr("href"));
+                Element eeI = eI.getElementsByTag("img").first();
+                bean.setImgUrl(eeI.attr("data-original"));
+                Element eeM = e1.getElementsByTag("p").first();
+                Element eeN = eeM.select("span.mod-cover-list-text").first();
+                bean.setCurrent(eeN.text());
+                Element e2 = e.select("p.ret-works-decs").first();
+                bean.setDesc(e2.text());
+                categorylists.add(bean);
+            }
         }
+
         return categorylists;
     }
 
@@ -304,33 +307,39 @@ public class JsoupUtils {
         Element element11 = element1.getElementsByTag("a").first();
         comic.setTitle(element11.attr("title"));
         Element element111 = element11.getElementsByTag("img").first();
-        comic.setImgUrl(element111.attr("data-original"));
-        Element element12 = element1.select("label.works-intro-status").first();
+        comic.setImgUrl(element111.attr("src"));
+        Element element12 = element1.getElementsByTag("label").first();
         comic.setStatus(element12.text());
-        Element element2 = element.select("strong.ui-text-orange").first();
+        Element element112=element.select("div.works-intro-detail").first();
+        Element element2 = element112.select("strong.ui-text-orange").first();
         if (element2 != null) {
             comic.setScore(element2.text());
         } else {
             comic.setScore("暂未评分");
         }
-        Element element3 = element.select("span.first").first();
-        comic.setAuthor(element3.text());
+        Element element3 = element112.select("p.works-intro-digi").first();
+        Element element33= element3.select("em").get(0);
+        comic.setAuthor(element33.text());
         Element element4 = element.select("p.works-intro-short").select("p.ui-text-gray9").first();
         comic.setSummary(element4.text());
-        Element element5 = doc.select("ul.works-chapter-log").select("ul.ui-left").first(); // 含有class，可用.
-        Element element6 = element5.select("span.ui-pl10").select("span.ui-text-gray6").first();
-        comic.setUpdates(element6.text());
-        Element e0 = doc.select("ol.chapter-page-all").select("ol.works-chapter-list").first(); //document.select()
+        Element element5 = doc.select("div.works-chapter-top").first(); // 含有class，可用.
+        Element element6 = element5.select("span.ui-pl10").first();
+        if (element6 != null) {
+            comic.setUpdates(element6.text());
+        } else {
+            comic.setUpdates("无");
+        }
+        Element e0 = doc.select("div.works-chapter-list-wr").first(); //document.select()
         Elements es = e0.select("span.works-chapter-item"); //取Element用first（）,Elements不用first（）
-        List<Chapter> list = new ArrayList<>();
+        List<ChapterBean> list = new ArrayList<>();
         for (Element e : es) {
-            Chapter ep = new Chapter();
+            ChapterBean ep = new ChapterBean();
             Element ee = e.getElementsByTag("a").first();
             ep.setUrl(ee.attr("href"));
             ep.setTitle(ee.text());
             list.add(ep);
         }
-        comic.setmChapterList(list);
+        comic.setChapterList(list);
         return comic;
     }
 }

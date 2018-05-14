@@ -58,6 +58,7 @@ public class ClassifyPagerFragment extends BaseFragment implements ComicLoadMore
     @Override
     protected void initData() {
         mType = getArguments().getInt("fragmentID");
+        getClassifyComic(mType,0);
         mList = new ArrayList<>();
         mAdapter = new ComicPagerAdapter();
         mMoreAdapter=new ComicLoadMoreAdapter(mAdapter,  this);

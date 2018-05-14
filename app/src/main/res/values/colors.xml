@@ -101,5 +101,7 @@
 
     <color name="color_search_bg">#E5E5E5</color>
     <color name="color_search_text">#838B83</color>
+    <color name="colorBottom">#e2e2e2</color>
+    <color name="colorBg">#ffffff</color>
 </resources>
 

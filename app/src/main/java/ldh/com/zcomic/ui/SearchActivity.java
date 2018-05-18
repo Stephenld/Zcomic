@@ -28,6 +28,7 @@ import ldh.com.zcomic.entity.Constants;
 import ldh.com.zcomic.utils.JsoupUtils;
 import ldh.com.zcomic.utils.OkHttpResultCallback;
 import ldh.com.zcomic.utils.OkHttpUtil;
+import ldh.com.zcomic.utils.ViewUtil;
 import ldh.com.zcomic.view.EditTextWithDel;
 import okhttp3.Call;
 
@@ -53,7 +54,17 @@ public class SearchActivity extends AppCompatActivity {
         setContentView(R.layout.search_activity);
         ButterKnife.bind(this);
     }
-
+    @Override
+    protected void onStart() {
+        super.onStart();
+        //屏幕亮度
+        Constants.osScreenBrightValue = ViewUtil.getScreenBrightness(this);
+        if (Constants.osNightModel){
+            ViewUtil.setScreenBrightness(this, 10);
+        }else {
+            ViewUtil.setScreenBrightness(this, Constants.osScreenBrightValue);
+        }
+    }
     @OnClick(R.id.ib_search)
     public void onViewClicked() {
         if (TextUtils.isEmpty(et_search.getText().toString())){

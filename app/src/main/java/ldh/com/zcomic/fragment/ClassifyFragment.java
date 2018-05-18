@@ -90,7 +90,6 @@ public class ClassifyFragment extends BaseFragment {
     private void getDataFromSharedPreference() {
         isFirst = sharedPreferences.getBoolean("isFirst", true);
         if (isFirst) {
-//            myChannelList = CategoryDataUtils.getChannelCategoryBeans();
             myChannelList = getMyChannel();
             moreChannelList = getMoreChannel();
             myChannelList = setType(myChannelList);

@@ -34,6 +34,7 @@ import java.lang.ref.WeakReference;
 import butterknife.BindView;
 import de.hdodenhof.circleimageview.CircleImageView;
 import ldh.com.zcomic.bean.User;
+import ldh.com.zcomic.entity.Constants;
 import ldh.com.zcomic.fragment.ClassifyFragment;
 import ldh.com.zcomic.fragment.CollectionFragment;
 import ldh.com.zcomic.fragment.HotFragment;
@@ -42,6 +43,7 @@ import ldh.com.zcomic.ui.LoginActivity;
 import ldh.com.zcomic.ui.SearchActivity;
 import ldh.com.zcomic.utils.ActivityUtils;
 import ldh.com.zcomic.utils.SharedPreUtils;
+import ldh.com.zcomic.utils.ViewUtil;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener,Toolbar.OnMenuItemClickListener {
     @BindView(R.id.fl_layout)
@@ -62,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private TextView user_name, user_email;
     private CircleImageView user_photo;
 
+    private  boolean enableNightMode ;
     private long waitTime = 2000;
     private long touchTime = 0;
     private static final int REQUEST_CODE = 1;
@@ -200,7 +203,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //                    fragmentTransaction.show(mHotFragment);
 //                }
 //                getSupportActionBar().setTitle("热门漫画");
-              if (mHotFragment == null) {
+                if (mHotFragment == null) {
                     mHotFragment = new HotFragment();
                 }
                 fragmentTransaction.replace(R.id.fl_layout, mHotFragment);
@@ -215,7 +218,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //                    fragmentTransaction.show(mNewsFragment);
 //                }
 //                getSupportActionBar().setTitle("漫画资讯");
-              if (mNewsFragment == null ) {
+                if (mNewsFragment == null) {
                     mNewsFragment = new NewsFragment();
                 }
                 fragmentTransaction.replace(R.id.fl_layout, mNewsFragment);
@@ -240,42 +243,40 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.nav_version_update:
 //                VersionUtils.versionUpdate(MainActivity.this,);
-                Toast.makeText(this, "暂无更新版本",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "暂无更新版本", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.nav_change_theme:
                 alertChangeTheme();
                 break;
             case R.id.nav_day_night:
-
-                if (SharedPreUtils.getInt(this, "theme_id", R.style.AppTheme) != R.style.AppTheme_Night) {
-                    changeTheme(9);
-                } else {
-                    Intent intent = getIntent();
-                    SharedPreUtils.putInt(this, "theme_id", R.style.AppTheme);
-                    overridePendingTransition(R.anim.design_snackbar_in, R.anim.design_snackbar_out);
-                    finish();
-                    overridePendingTransition(R.anim.design_snackbar_in, R.anim.design_snackbar_out);
-                    startActivity(intent);
+                if (!Constants.osNightModel){
+                    Constants.osNightModel = true;
+                    ViewUtil.setScreenBrightness(MainActivity.this, 10);
+                    SharedPreUtils.putBoolean(MainActivity.this,"nightModel", true);
+                }else {
+                    Constants.osNightModel = false;
+                    ViewUtil.setScreenBrightness(MainActivity.this,Constants.osScreenBrightValue);
+                    SharedPreUtils.putBoolean(MainActivity.this,"nightModel", false);
                 }
-                break;
+                    break;
             case R.id.nav_exit:
-                new AlertDialog.Builder(this).setTitle("是否退出当前账户？")
-                        .setNegativeButton("取消", null)
-                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                User.logOut();
-                                user_email.setText("");
-                                user_name.setText("登录/注册");
-                                user_photo.setImageResource(R.drawable.default_icon);
-                            }
-                        }).show();
-                break;
+                        new AlertDialog.Builder(this).setTitle("是否退出当前账户？")
+                                .setNegativeButton("取消", null)
+                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        User.logOut();
+                                        user_email.setText("");
+                                        user_name.setText("登录/注册");
+                                        user_photo.setImageResource(R.drawable.default_icon);
+                                    }
+                                }).show();
+                        break;
+                }
+                mDrawerLayout.closeDrawer(GravityCompat.START);
+                fragmentTransaction.commit();
+                return true;
         }
-        mDrawerLayout.closeDrawer(GravityCompat.START);
-        fragmentTransaction.commit();
-        return true;
-    }
 
     private void clearCaches() {
 
@@ -334,21 +335,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         view.findViewById(R.id.tv_pp).setOnClickListener(this);
         view.findViewById(R.id.tv_yellow).setOnClickListener(this);
     }
-
-    private void hideAllFragment(FragmentTransaction fragmentTransaction) {
-        if (mNewsFragment != null) {
-            fragmentTransaction.hide(mNewsFragment);
-        }
-        if (mClassifyFragment != null) {
-            fragmentTransaction.hide(mClassifyFragment);
-        }
-        if (mHotFragment != null) {
-            fragmentTransaction.hide(mHotFragment);
-        }
-        if (mCollectionFragment != null) {
-            fragmentTransaction.hide(mCollectionFragment);
-        }
-    }
+//
+//    private void hideAllFragment(FragmentTransaction fragmentTransaction) {
+//        if (mNewsFragment != null) {
+//            fragmentTransaction.hide(mNewsFragment);
+//        }
+//        if (mClassifyFragment != null) {
+//            fragmentTransaction.hide(mClassifyFragment);
+//        }
+//        if (mHotFragment != null) {
+//            fragmentTransaction.hide(mHotFragment);
+//        }
+//        if (mCollectionFragment != null) {
+//            fragmentTransaction.hide(mCollectionFragment);
+//        }
+//    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -414,7 +415,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int[] themes = new int[]{R.style.AppTheme, R.style.AppTheme_Blue, R.style.AppTheme_Green,
                 R.style.AppTheme_Orange, R.style.AppTheme_Pink, R.style.AppTheme_Red,
                 R.style.AppTheme_Purple, R.style.AppTheme_PP, R.style.AppTheme_Yellow,
-                R.style.AppTheme_Night};
+              };
         SharedPreUtils.putInt(this, "theme_id", themes[index]);
         Intent intent = getIntent();
         overridePendingTransition(R.anim.abc_popup_enter, R.anim.abc_popup_exit);

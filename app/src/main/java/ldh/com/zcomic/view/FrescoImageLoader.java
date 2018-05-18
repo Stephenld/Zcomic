@@ -8,7 +8,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.youth.banner.loader.ImageLoader;
 
 /**
- * Created by PC on 2017/9/27.
+ *  Created by allen liu on 2018/5/10.
  */
 
 public class FrescoImageLoader extends ImageLoader {

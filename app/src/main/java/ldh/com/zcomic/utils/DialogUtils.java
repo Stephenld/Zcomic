@@ -4,9 +4,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.support.v7.app.AlertDialog;
 
-/*
- *  描述：    自定义提示框
- */
 public class DialogUtils {
 
     //标准的提示框

@@ -7,8 +7,10 @@ import android.view.MenuItem;
 
 import butterknife.ButterKnife;
 import ldh.com.zcomic.R;
+import ldh.com.zcomic.entity.Constants;
 import ldh.com.zcomic.utils.SharedPreUtils;
 import ldh.com.zcomic.utils.VersionUtils;
+import ldh.com.zcomic.utils.ViewUtil;
 
 /**
  * Created by allen liu on 2018/5/2.
@@ -16,6 +18,7 @@ import ldh.com.zcomic.utils.VersionUtils;
 
 public abstract class BaseActivity extends AppCompatActivity {
     protected Activity mContext;
+    protected  boolean enableNightMode ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,5 +51,17 @@ public abstract class BaseActivity extends AppCompatActivity {
             finish();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        //屏幕亮度
+        Constants.osScreenBrightValue = ViewUtil.getScreenBrightness(this);
+        if (Constants.osNightModel){
+            ViewUtil.setScreenBrightness(this, 10);
+        }else {
+            ViewUtil.setScreenBrightness(this, Constants.osScreenBrightValue);
+        }
     }
 }

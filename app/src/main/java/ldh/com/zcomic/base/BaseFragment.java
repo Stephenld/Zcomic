@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import com.facebook.drawee.backends.pipeline.Fresco;
 
 import butterknife.ButterKnife;
+import ldh.com.zcomic.entity.Constants;
+import ldh.com.zcomic.utils.ViewUtil;
 
 /**
  * Created by allen liu on 2018/5/2.
@@ -43,4 +45,16 @@ public abstract class BaseFragment extends Fragment {
     protected abstract int getResRootViewId() ;
     protected abstract void initData();
     protected abstract void initListener();
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        //屏幕亮度
+        Constants.osScreenBrightValue = ViewUtil.getScreenBrightness(getActivity());
+        if (Constants.osNightModel){
+            ViewUtil.setScreenBrightness(getActivity(), 10);
+        }else {
+            ViewUtil.setScreenBrightness(getActivity(), Constants.osScreenBrightValue);
+        }
+    }
 }

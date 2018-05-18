@@ -5,6 +5,9 @@ package ldh.com.zcomic.entity;
  */
 
 public class Constants {
+    public static int osScreenBrightValue = 150;//屏幕亮度值
+    public static boolean osNightModel = false;//夜间模式
+
     public static final int CONNECT_TIMEOUT = 6;
     public static final int READ_TIMEOUT = 100;
     public static final int WRITE_TIMEOUT = 60;

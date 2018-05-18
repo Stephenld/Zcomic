@@ -10,14 +10,6 @@
         <!--<item name="mainBackground">@android:color/white</item>-->
     </style>
 
-    <!--夜间模式-->
-    <style name="AppTheme_Night" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/colorPrimary_Night</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDarkNight</item>
-        <item name="colorAccent">@color/colorAccentNight</item>
-        <item name="android:background">@color/colorAccentNight</item>
-    </style>
-
     <style name="AppTheme_Blue" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary_Blue</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark_Blue</item>
@@ -97,5 +89,10 @@
 
     <item name="android:textSize">16sp</item>
     <item name="android:textColorPrimary">@color/color_search_text</item>
+    </style>
+
+    <style name="ActionSheetDialogAnimation" parent="@android:style/Animation.Dialog">
+        <item name="android:windowEnterAnimation">@anim/fade_in</item>
+        <item name="android:windowExitAnimation">@anim/fade_out</item>
     </style>
 </resources>

@@ -6,7 +6,9 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 import cn.bmob.v3.Bmob;
+import ldh.com.zcomic.entity.Constants;
 import ldh.com.zcomic.entity.Key;
+import ldh.com.zcomic.utils.SharedPreUtils;
 
 
 /**
@@ -18,7 +20,8 @@ public class BaseApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-            Bmob.initialize(this, Key.BMOB_APPLICATION_KEY);
+        Bmob.initialize(this, Key.BMOB_APPLICATION_KEY);
+        Constants.osNightModel = SharedPreUtils.getBoolean(getApplicationContext(), "nightModel", false);
     }
     public static Context getContext() {
         return context;

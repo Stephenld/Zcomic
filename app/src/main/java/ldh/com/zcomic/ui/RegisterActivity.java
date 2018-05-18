@@ -20,7 +20,7 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
 import ldh.com.zcomic.R;
 import ldh.com.zcomic.base.BaseActivity;
-import ldh.com.zcomic.bean.AppUser;
+import ldh.com.zcomic.bean.User;
 
 public class RegisterActivity extends BaseActivity {
     private static final String LOG_MSG = "RegisterActivity";
@@ -30,7 +30,7 @@ public class RegisterActivity extends BaseActivity {
 
     private boolean isHidden = true;
 
-    private AppUser appUser;
+    private User appUser;
 
     private ImageButton titleImv;
     private TextView titleCenterTv;
@@ -128,13 +128,13 @@ public class RegisterActivity extends BaseActivity {
                     nickNameWarnImv.setVisibility(View.GONE);
                     emailWarnImv.setVisibility(View.GONE);
 
-                    appUser = new AppUser();
+                    appUser = new User();
                     appUser.setUsername(nickNameStr);
                     appUser.setPassword(passwordStr);
                     appUser.setEmail(emailAddressStr);
-                    appUser.signUp(new SaveListener<AppUser>() {
+                    appUser.signUp(new SaveListener<User>() {
                         @Override
-                        public void done(AppUser appUser, BmobException e) {
+                        public void done(User appUser, BmobException e) {
                             if (e == null) {
                                 Log.i(LOG_MSG, "$$$$$$: 注册成功");
                                 Toast.makeText(RegisterActivity.this, "注册成功!", Toast.LENGTH_LONG).show();

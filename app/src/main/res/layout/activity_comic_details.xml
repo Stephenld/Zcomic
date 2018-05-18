@@ -3,8 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:toolbar="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rl_main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    >
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
@@ -71,7 +73,7 @@
                 android:layout_alignTop="@id/rl_cover"
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="5dp"
-                android:textColor="?attr/colorPrimaryDark"
+                android:textColor="@color/white"
                 android:layout_toRightOf="@id/rl_cover"
                 android:textSize="16sp"
                 tools:text="漫画名" />
@@ -82,7 +84,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignLeft="@id/tv_comic_name"
                 android:layout_below="@id/tv_comic_name"
-                android:textColor="?attr/colorPrimary"
+                android:textColor="@color/white"
                 android:singleLine="true"
                 android:ellipsize="end"
                 tools:text="作者"/>
@@ -93,7 +95,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignLeft="@id/tv_comic_name"
                 android:layout_below="@id/tv_comic_author"
-                android:textColor="?attr/colorPrimary"
+                android:textColor="@color/white"
                 tools:text="连载中" />
 
             <TextView
@@ -102,7 +104,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignLeft="@id/tv_comic_name"
                 android:layout_below="@id/tv_comic_status"
-                android:textColor="?attr/colorPrimary"
+                android:textColor="@color/white"
                 tools:text="评分:  9.0"
                 />
 
@@ -113,7 +115,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@id/tv_comic_score"
                 android:layout_below="@id/tv_comic_status"
-                android:textColor="?attr/colorPrimary"
+                android:textColor="@color/white"
                 tools:text="时间:  2018-05-12"
               />
             <TextView
@@ -130,7 +132,7 @@
 
             <TextView
                 android:id="@+id/tv_chapter"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/rl_cover"
                 android:layout_marginTop="8dp"
@@ -167,20 +169,20 @@
             android:orientation="vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
+
             <RelativeLayout
                 android:id="@+id/rl_locationUp"
                 android:background="@drawable/btn_location"
+                android:layout_marginTop="20dp"
                 android:layout_width="40dp"
-                android:layout_height="40dp"
-                >
+                android:layout_height="40dp">
                 <ImageView
                     android:id="@+id/iv_location"
                     android:layout_marginTop="5dp"
                     android:layout_centerHorizontal="true"
                     android:src="@drawable/icon_location"
                     android:layout_width="15dp"
-                    android:layout_height="15dp"
-                    />
+                    android:layout_height="15dp"/>
                 <TextView
                     android:layout_below="@id/iv_location"
                     android:text="开始"
@@ -188,17 +190,38 @@
                     android:layout_height="wrap_content"
                     android:textSize="8dp"
                     android:layout_marginTop="2dp"
-                    android:layout_centerHorizontal="true"
-                    />
-
+                    android:layout_centerHorizontal="true"/>
             </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_marginTop="20dp"
+                android:id="@+id/rl_collect"
+                android:background="@drawable/btn_location"
+                android:layout_width="40dp"
+                android:layout_height="40dp">
+                <ImageView
+                    android:id="@+id/iv_collect"
+                    android:layout_marginTop="5dp"
+                    android:layout_centerHorizontal="true"
+                    android:src="@drawable/comic_collect_off"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"/>
+                <TextView
+                    android:layout_below="@id/iv_collect"
+                    android:text="收藏"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="8dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_centerHorizontal="true"/>
+            </RelativeLayout>
+
             <RelativeLayout
                 android:layout_marginTop="20dp"
                 android:id="@+id/rl_locationBottom"
                 android:background="@drawable/btn_location"
                 android:layout_width="40dp"
-                android:layout_height="40dp"
-                >
+                android:layout_height="40dp">
                 <ImageView
                     android:id="@+id/iv_scroll"
                     android:layout_marginTop="5dp"
@@ -218,5 +241,6 @@
                     />
             </RelativeLayout>
         </LinearLayout>
+
     </RelativeLayout>
 </RelativeLayout>

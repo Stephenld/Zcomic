@@ -7,6 +7,8 @@ import java.util.List;
  */
 
 public class ComicItem {
+
+    private String id;
     private String imgUrl;
     private String title;
     private String status;
@@ -88,4 +90,8 @@ public class ComicItem {
     public void setChapterList(List<ChapterBean> mEpisodeList) {
         this.mChapterList = mEpisodeList;
     }
+
+    public String getId() {return id;}
+
+    public void setId(String id) {this.id = id;}
 }

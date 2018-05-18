@@ -33,14 +33,15 @@ public class ComicPageActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-
         mUrl = getIntent().getStringExtra("url");
         mTitle = getIntent().getStringExtra("title");
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle(mTitle);
         WebSettings webSettings = mWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
+        webSettings.setBlockNetworkImage(false);
         webSettings.setUseWideViewPort(true);
+        webSettings.setDomStorageEnabled(true);
         webSettings.setLoadWithOverviewMode(true);
         webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
         webSettings.setSupportZoom(true);

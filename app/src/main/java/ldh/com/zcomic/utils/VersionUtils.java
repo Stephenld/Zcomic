@@ -55,7 +55,7 @@ public class VersionUtils {
                 .url(url)//
                 .build()//
                 .execute(new FileCallBack(Environment.getExternalStorageDirectory()
-                        .getAbsolutePath(), "QNews.apk") {
+                        .getAbsolutePath(), "Zcomic.apk") {
 
                     @Override
                     public void inProgress(float progress, long total, int id) {

@@ -33,7 +33,7 @@ import java.lang.ref.WeakReference;
 
 import butterknife.BindView;
 import de.hdodenhof.circleimageview.CircleImageView;
-import ldh.com.zcomic.bean.AppUser;
+import ldh.com.zcomic.bean.User;
 import ldh.com.zcomic.fragment.ClassifyFragment;
 import ldh.com.zcomic.fragment.CollectionFragment;
 import ldh.com.zcomic.fragment.HotFragment;
@@ -107,13 +107,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void initData() {
         mFragmentManager = getSupportFragmentManager();
-        if (mClassifyFragment == null) {
             mClassifyFragment = new ClassifyFragment();
-            FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
-            fragmentTransaction.add(R.id.fl_layout, mClassifyFragment);
-            fragmentTransaction.commit();
 //            getSupportActionBar().setTitle("分类漫画");
-        }
+        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+        fragmentTransaction.add(R.id.fl_layout, mClassifyFragment);
+        fragmentTransaction.commit();
     }
 
     protected void initView() {
@@ -181,43 +179,59 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
         switch (item.getItemId()) {
             case R.id.nav_classify:
-                hideAllFragment(fragmentTransaction);
-                if (mClassifyFragment == null) {
-                    mClassifyFragment = new ClassifyFragment();
-                    fragmentTransaction.add(R.id.fl_layout, mClassifyFragment);
-                } else {
-                    fragmentTransaction.show(mClassifyFragment);
-                }
+//                hideAllFragment(fragmentTransaction);
+//                if (mClassifyFragment == null) {
+//                    mClassifyFragment = new ClassifyFragment();
+//                    fragmentTransaction.add(R.id.fl_layout, mClassifyFragment);
+//                } else {
+//                    fragmentTransaction.show(mClassifyFragment);
+//                }
+//                getSupportActionBar().setTitle("分类漫画");
+                mClassifyFragment = new ClassifyFragment();
+                fragmentTransaction.replace(R.id.fl_layout, mClassifyFragment);
                 getSupportActionBar().setTitle("分类漫画");
                 break;
             case R.id.nav_hot:
-                hideAllFragment(fragmentTransaction);
-                if (mHotFragment == null) {
+//                hideAllFragment(fragmentTransaction);
+//                if (mHotFragment == null) {
+//                    mHotFragment = new HotFragment();
+//                    fragmentTransaction.add(R.id.fl_layout, mHotFragment);
+//                } else {
+//                    fragmentTransaction.show(mHotFragment);
+//                }
+//                getSupportActionBar().setTitle("热门漫画");
+              if (mHotFragment == null) {
                     mHotFragment = new HotFragment();
-                    fragmentTransaction.add(R.id.fl_layout, mHotFragment);
-                } else {
-                    fragmentTransaction.show(mHotFragment);
                 }
+                fragmentTransaction.replace(R.id.fl_layout, mHotFragment);
                 getSupportActionBar().setTitle("热门漫画");
                 break;
             case R.id.nav_news:
-                hideAllFragment(fragmentTransaction);
-                if (mNewsFragment == null) {
+//                hideAllFragment(fragmentTransaction);
+//                if (mNewsFragment == null ) {
+//                    mNewsFragment = new NewsFragment();
+//                    fragmentTransaction.add(R.id.fl_layout, mNewsFragment);
+//                } else {
+//                    fragmentTransaction.show(mNewsFragment);
+//                }
+//                getSupportActionBar().setTitle("漫画资讯");
+              if (mNewsFragment == null ) {
                     mNewsFragment = new NewsFragment();
-                    fragmentTransaction.add(R.id.fl_layout, mNewsFragment);
-                } else {
-                    fragmentTransaction.show(mNewsFragment);
                 }
+                fragmentTransaction.replace(R.id.fl_layout, mNewsFragment);
                 getSupportActionBar().setTitle("漫画资讯");
                 break;
             case R.id.nav_collect:
-                hideAllFragment(fragmentTransaction);
+//                hideAllFragment(fragmentTransaction);
+//                if (mCollectionFragment == null) {
+//                    mCollectionFragment = new CollectionFragment();
+//                }
+//                fragmentTransaction.replace(R.id.fl_layout, mCollectionFragment);
+//                getSupportActionBar().setTitle("我的收藏");
                 if (mCollectionFragment == null) {
                     mCollectionFragment = new CollectionFragment();
-                    fragmentTransaction.add(R.id.fl_layout, mCollectionFragment);
-                } else {
-                    fragmentTransaction.show(mCollectionFragment);
                 }
+                fragmentTransaction.replace(R.id.fl_layout, mCollectionFragment);
                 getSupportActionBar().setTitle("我的收藏");
                 break;
 
@@ -226,6 +240,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.nav_version_update:
 //                VersionUtils.versionUpdate(MainActivity.this,);
+                Toast.makeText(this, "暂无更新版本",Toast.LENGTH_SHORT).show();
                 break;
             case R.id.nav_change_theme:
                 alertChangeTheme();
@@ -242,6 +257,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     overridePendingTransition(R.anim.design_snackbar_in, R.anim.design_snackbar_out);
                     startActivity(intent);
                 }
+                break;
+            case R.id.nav_exit:
+                new AlertDialog.Builder(this).setTitle("是否退出当前账户？")
+                        .setNegativeButton("取消", null)
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                User.logOut();
+                                user_email.setText("");
+                                user_name.setText("登录/注册");
+                                user_photo.setImageResource(R.drawable.default_icon);
+                            }
+                        }).show();
                 break;
         }
         mDrawerLayout.closeDrawer(GravityCompat.START);
@@ -341,11 +369,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void initUserViews() {
-        if (AppUser.getCurrentUser() != null) {
+        if (User.getCurrentUser() != null) {
             user_photo.setImageResource(R.mipmap.ic_launcher);
-            user_name.setText(AppUser.getCurrentUser().getUsername());
+            user_name.setText(User.getCurrentUser().getUsername());
             user_email.setVisibility(View.VISIBLE);
-            user_email.setText(AppUser.getCurrentUser().getEmail());
+            user_email.setText(User.getCurrentUser().getEmail());
         }
     }
 
@@ -422,4 +450,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             mClassifyFragment.notifyChannelChange();
         }
     }
+//    @Override
+//    public void onAttachFragment(android.support.v4.app.Fragment fragment) {
+//        super.onAttachFragment(fragment);
+//        if (mNewsFragment == null && fragment instanceof NewsFragment) {
+//            mNewsFragment = (NewsFragment) fragment;
+//        } else if (mClassifyFragment == null && fragment instanceof ClassifyFragment) {
+//            mClassifyFragment = (ClassifyFragment) fragment;
+//        } else if (mHotFragment == null && fragment instanceof HotFragment) {
+//            mHotFragment = (HotFragment) fragment;
+//        } else if (mCollectionFragment == null && fragment instanceof CollectionFragment) {
+//            mCollectionFragment = (CollectionFragment) fragment;
+//        }
+//    }
 }

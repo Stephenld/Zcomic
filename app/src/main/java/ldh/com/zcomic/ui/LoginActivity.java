@@ -20,7 +20,7 @@ import cn.bmob.v3.listener.SaveListener;
 import ldh.com.zcomic.MainActivity;
 import ldh.com.zcomic.R;
 import ldh.com.zcomic.base.BaseActivity;
-import ldh.com.zcomic.bean.AppUser;
+import ldh.com.zcomic.bean.User;
 
 /**
  * Created by allen liu on 2018/5/3.
@@ -117,12 +117,12 @@ public class LoginActivity extends BaseActivity {
                     Toast.makeText(LoginActivity.this, "请输入您的密码!", Toast.LENGTH_LONG).show();
                 } else if (!"".equals(emailAddressStr) && !"".equals(passwordStr)) {
                     emailWarnImv.setVisibility(View.GONE);
-                    AppUser appUser = new AppUser();
+                    User appUser = new User();
                     appUser.setUsername(emailAddressStr);
                     appUser.setPassword(passwordStr);
-                    appUser.login(new SaveListener<AppUser>() {
+                    appUser.login(new SaveListener<User>() {
                         @Override
-                        public void done(AppUser appUser, BmobException e) {
+                        public void done(User appUser, BmobException e) {
                             if (appUser != null) {
                                 Log.i(LOG_MSG, "$$$$$$: 用户登陆成功!");
                                 Toast.makeText(LoginActivity.this, "登录成功, 欢迎使用!", Toast.LENGTH_SHORT).show();

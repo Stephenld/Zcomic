@@ -1,5 +1,6 @@
 package ldh.com.zcomic.adapter;
 
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -29,9 +30,9 @@ public class ComicHotPagerAdapter extends BasePagerAdapter<ComicBean> {
         ((ComicHotHolder)holder).bindView(mDataList.get(position));
     }
     class ComicHotHolder extends BaseRvHolder {
-        @BindView(R.id.sdv_image)
+        @BindView(R.id.sdv_hot_image)
         SimpleDraweeView mSdvImage;
-        @BindView(R.id.tv_title)
+        @BindView(R.id.tv_hot_title)
         TextView mTvTitle;
         @BindView(R.id.tv_current)
         TextView mTvCurrent;
@@ -42,7 +43,7 @@ public class ComicHotPagerAdapter extends BasePagerAdapter<ComicBean> {
         }
         @Override
         protected void bindView(ComicBean comicBean) {
-            mSdvImage.setImageURI(comicBean.getImgUrl());
+            mSdvImage.setImageURI(Uri.parse(comicBean.getImgUrl()));
             mTvTitle.setText(comicBean.getTitle());
             mTvCurrent.setText(comicBean.getCurrent());
             mTvPopular.setText("人气："+ comicBean.getPopularity());

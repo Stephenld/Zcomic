@@ -90,8 +90,10 @@ public class ClassifyPagerFragment extends BaseFragment implements ComicLoadMore
             @Override
             public void onItemClick(int position) {
                 Intent intent = new Intent(getActivity(), ComicItemActivity.class);
-                intent.putExtra("comicItemUrl",mList.get(position).getContentUrl());
+                String url = mList.get(position).getContentUrl();
+                intent.putExtra("comicItemUrl",url);
                 intent.putExtra("comicItemTitle",mList.get(position).getTitle());
+                intent.putExtra("comicId",mList.get(position).getComicId());
                 startActivity(intent);
             }
             @Override

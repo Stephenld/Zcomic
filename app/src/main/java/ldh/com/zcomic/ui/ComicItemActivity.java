@@ -9,7 +9,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -18,6 +17,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.model.GlideUrl;
@@ -33,6 +33,8 @@ import butterknife.BindView;
 import ldh.com.zcomic.R;
 import ldh.com.zcomic.adapter.ChapterAdapter;
 import ldh.com.zcomic.base.BaseActivity;
+import ldh.com.zcomic.base.BaseController;
+import ldh.com.zcomic.base.UserController;
 import ldh.com.zcomic.bean.ChapterBean;
 import ldh.com.zcomic.bean.ComicItem;
 import ldh.com.zcomic.utils.JsoupUtils;
@@ -64,6 +66,8 @@ public class ComicItemActivity extends BaseActivity {
     ImageView ivCover;
     @BindView(R.id.tv_comic_name)
     TextView tvComicName;
+    @BindView(R.id.iv_collect)
+    ImageView ivCollect;
     @BindView(R.id.tv_comic_author)
     TextView tvComicAuthor;
     @BindView(R.id.tv_comic_status)
@@ -82,11 +86,18 @@ public class ComicItemActivity extends BaseActivity {
     RelativeLayout rlLocationUp;
     @BindView(R.id.rl_locationBottom)
     RelativeLayout rlLocationBottom;
+    @BindView(R.id.rl_main)
+    RelativeLayout rlMain;
+    @BindView(R.id.rl_collect)
+    RelativeLayout rlCollect;
 
     private String mUrl;
     private String mTitle;
+    private String comicId;
     private ChapterAdapter mAdapter;
     private List<ChapterBean> mList;
+    private UserController userController;
+
     @Override
     protected int setLayoutResID() {
         return R.layout.activity_comic_details;
@@ -94,29 +105,38 @@ public class ComicItemActivity extends BaseActivity {
 
     @Override
     protected void initView() {
+        userController = UserController.getInstance();
         progressBar.setVisibility(View.VISIBLE);
         mList = new ArrayList<>();
         mUrl = getIntent().getStringExtra("comicItemUrl");
         mTitle = getIntent().getStringExtra("comicItemTitle");
+        comicId = getIntent().getStringExtra("comicId");
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(mTitle);
         getComicDetailData(mUrl);
+        initCollectIcon();
     }
+
+    private void initCollectIcon() {
+        if(userController.getCollectId().contains(comicId)){
+            ivCollect.setBackgroundResource(R.drawable.comic_collect_on);
+        } else{
+            ivCollect.setBackgroundResource(R.drawable.comic_collect_off);
+        }
+    }
+
     private void getComicDetailData(String mUrl) {
         String url ="http://ac.qq.com"+ mUrl;
-        Log.i("comicc", url);
         OkHttpUtil.getInstance().getAsync(url, new OkHttpResultCallback() {
             @Override
             public void onError(Call call, Exception e) {
                 e.getMessage();
             }
-
             @Override
             public void onResponse(byte[] bytes) {
                 try {
                     String s = new String(bytes, "utf-8");
                     ComicItem comicDetailData = JsoupUtils.getInstance().getComicDetailData(s);
-                    Log.i("comi",comicDetailData.toString());
                     getCategoryComicSuccess(comicDetailData);
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
@@ -133,7 +153,7 @@ public class ComicItemActivity extends BaseActivity {
         tvComicDesc.setText("简介："+comicItem.getSummary());
         tvComicTime.setText("更新："+comicItem.getUpdates());
 
-        Glide.with(this) .asBitmap().load(new GlideUrl(comicItem.getImgUrl(), new LazyHeaders.Builder()
+        Glide.with(this).asBitmap().load(new GlideUrl(comicItem.getImgUrl(), new LazyHeaders.Builder()
                 .addHeader("comic", comicItem.getImgUrl())
                 .build())).into(new SimpleTarget<Bitmap>() {
             @Override
@@ -163,13 +183,34 @@ public class ComicItemActivity extends BaseActivity {
                 slContent.fullScroll(ScrollView.FOCUS_DOWN);
             }
         });
+        rlCollect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                userController.addUserCollect(comicId, ivCollect, new BaseController.onBmobUserListener() {
+                    @Override
+                    public void onSuccess(String success) {
+                        Toast.makeText(ComicItemActivity.this, success,Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        Toast.makeText(ComicItemActivity.this, error,Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onLoading(String loading) {
+                        Toast.makeText(ComicItemActivity.this, loading,Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
         gvChapter.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(ComicItemActivity.this, ComicPageActivity.class);
-                intent.putExtra("url", mList.get(position).getUrl());
+                intent.putExtra("url", "http://ac.qq.com"+ mList.get(position).getUrl());
                 intent.putExtra("title", mList.get(position).getTitle());
-                startActivityForResult(intent, 100);
+                startActivity(intent);
             }
         });
     }

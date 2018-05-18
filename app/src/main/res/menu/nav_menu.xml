@@ -39,6 +39,11 @@
                 android:id="@+id/nav_day_night"
                 android:title="切换夜间"
                 />
+            <item
+                android:icon="@drawable/icon_exit"
+                android:id="@+id/nav_exit"
+                android:title="退出登录"
+                />
         </menu>
     </item>
 </menu>

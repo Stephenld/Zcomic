@@ -1,5 +1,7 @@
 package ldh.com.zcomic.utils;
 
+import android.widget.Toast;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -8,9 +10,13 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.SaveListener;
 import ldh.com.zcomic.bean.ChapterBean;
 import ldh.com.zcomic.bean.ComicBean;
 import ldh.com.zcomic.bean.ComicItem;
+
+import static ldh.com.zcomic.base.BaseApplication.getContext;
 
 /**
  * Created by allen liu on 2018/5/7.
@@ -43,7 +49,11 @@ public class JsoupUtils {
                 Element e1 = e.select("div.ret-works-cover").first();
                 Element eI = e1.getElementsByTag("a").first();
                 bean.setTitle(eI.attr("title"));
+                Element ea = e.select("div.ret-works-info").first();
+                Element ez = ea.select("p.ret-works-author").first();
+                bean.setAuthor(ez.attr("title"));
                 bean.setContentUrl(eI.attr("href"));
+                bean.setComicId(eI.attr("href").substring(Integer.parseInt("16")));
                 Element eeI = eI.getElementsByTag("img").first();
                 bean.setImgUrl(eeI.attr("data-original"));
                 Element eeM = e1.getElementsByTag("p").first();
@@ -51,6 +61,14 @@ public class JsoupUtils {
                 bean.setCurrent(eeN.text());
                 Element e2 = e.select("p.ret-works-decs").first();
                 bean.setDesc(e2.text());
+                bean.save(new SaveListener<String>() {
+                    @Override
+                    public void done(String objectId, BmobException e) {
+                        if (e == null) {
+                            Toast.makeText(getContext(), "创建成功",Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
                 categorylists.add(bean);
             }
         }
@@ -70,11 +88,20 @@ public class JsoupUtils {
             ComicBean bean = new ComicBean();
             Element e1 = e.getElementsByTag("a").first();
             bean.setContentUrl(e1.attr("href"));
+            bean.setComicId(e1.attr("href").substring(Integer.parseInt("16")));
             bean.setTitle(e1.attr("title"));
             Element e2 = e1.getElementsByTag("img").first();
             bean.setImgUrl(e2.attr("data-original"));
             Element e3 = e.select("h3.mod_book_update").select("h3.fw").first();
             bean.setCurrent(e3.text());
+            bean.save(new SaveListener<String>() {
+                @Override
+                public void done(String objectId, BmobException e) {
+                    if (e == null) {
+                        Toast.makeText(getContext(), "创建成功",Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
             searchLists.add(bean);
         }
         return searchLists;
@@ -93,7 +120,11 @@ public class JsoupUtils {
             Element e1 = e.select("div.ret-works-cover").first();
             Element eI = e1.getElementsByTag("a").first();
             bean.setTitle(eI.attr("title"));
+            Element ea = e.select("div.ret-works-info").first();
+            Element ez = ea.select("p.ret-works-author").first();
+            bean.setAuthor(ez.attr("title"));
             bean.setContentUrl(eI.attr("href"));
+            bean.setComicId(eI.attr("href").substring(Integer.parseInt("16")));
             Element eeI = eI.getElementsByTag("img").first();
             bean.setImgUrl(eeI.attr("data-original"));
             Element eeM = e1.getElementsByTag("p").first();
@@ -105,6 +136,14 @@ public class JsoupUtils {
 //            Element e2 = doc.getElementsByAttributeValue("class","ret-works-tags").get(0); //不行，一页所有item都是相同人气值
 //            Element e3 = e2.select("em").get(0);
             bean.setPopularity(e4.text());
+            bean.save(new SaveListener<String>() {
+                @Override
+                public void done(String objectId, BmobException e) {
+                    if (e == null) {
+                        Toast.makeText(getContext(), "创建成功",Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
             hotlists.add(bean);
         }
         return hotlists;
@@ -341,6 +380,17 @@ public class JsoupUtils {
         }
         comic.setChapterList(list);
         return comic;
+    }
+
+    /**
+     * 抓取script标签的DATA字符串
+     */
+    public String getScriptData(String s) {
+        Document document = Jsoup.parse(s);
+        Elements elements = document.select("script");
+        String msg = elements.get(elements.size() - 4).html();
+        String data = msg.substring(msg.indexOf("\'") + 1, msg.lastIndexOf("\'"));
+        return data;
     }
 }
 

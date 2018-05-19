@@ -27,10 +27,6 @@
                 android:icon="@drawable/nav_clear_cache"
                 android:title="清理缓存" />
             <item
-                android:id="@+id/nav_version_update"
-                android:icon="@drawable/ic_version_update"
-                android:title="版本更新" />
-            <item
                 android:id="@+id/nav_change_theme"
                 android:icon="@drawable/change_theme"
                 android:title="更换主题" />
@@ -39,6 +35,10 @@
                 android:id="@+id/nav_day_night"
                 android:title="切换夜间"
                 />
+            <item
+                android:id="@+id/nav_menu_about"
+                android:icon="@drawable/icon_about"
+                android:title="关于软件" />
             <item
                 android:icon="@drawable/icon_exit"
                 android:id="@+id/nav_exit"

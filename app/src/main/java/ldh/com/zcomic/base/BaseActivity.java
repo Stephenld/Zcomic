@@ -9,7 +9,6 @@ import butterknife.ButterKnife;
 import ldh.com.zcomic.R;
 import ldh.com.zcomic.entity.Constants;
 import ldh.com.zcomic.utils.SharedPreUtils;
-import ldh.com.zcomic.utils.VersionUtils;
 import ldh.com.zcomic.utils.ViewUtil;
 
 /**
@@ -38,11 +37,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     private void init() {
         //设置显示返回键
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        //判断版本
-        if (VersionUtils.isLollipop()) {
-            //取消阴影
-            getSupportActionBar().setElevation(0);
-        }
+        getSupportActionBar().setElevation(0);
     }
     //返回键的响应
     @Override
@@ -59,7 +54,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         //屏幕亮度
         Constants.osScreenBrightValue = ViewUtil.getScreenBrightness(this);
         if (Constants.osNightModel){
-            ViewUtil.setScreenBrightness(this, 10);
+            ViewUtil.setScreenBrightness(this, 2);
         }else {
             ViewUtil.setScreenBrightness(this, Constants.osScreenBrightValue);
         }

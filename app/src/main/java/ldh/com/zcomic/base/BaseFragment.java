@@ -52,7 +52,7 @@ public abstract class BaseFragment extends Fragment {
         //屏幕亮度
         Constants.osScreenBrightValue = ViewUtil.getScreenBrightness(getActivity());
         if (Constants.osNightModel){
-            ViewUtil.setScreenBrightness(getActivity(), 10);
+            ViewUtil.setScreenBrightness(getActivity(), 2);
         }else {
             ViewUtil.setScreenBrightness(getActivity(), Constants.osScreenBrightValue);
         }

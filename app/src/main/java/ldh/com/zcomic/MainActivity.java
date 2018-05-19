@@ -39,6 +39,7 @@ import ldh.com.zcomic.fragment.ClassifyFragment;
 import ldh.com.zcomic.fragment.CollectionFragment;
 import ldh.com.zcomic.fragment.HotFragment;
 import ldh.com.zcomic.fragment.NewsFragment;
+import ldh.com.zcomic.ui.AboutActivity;
 import ldh.com.zcomic.ui.LoginActivity;
 import ldh.com.zcomic.ui.SearchActivity;
 import ldh.com.zcomic.utils.ActivityUtils;
@@ -241,9 +242,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_clear_cache:
                 clearCaches();
                 break;
-            case R.id.nav_version_update:
+            case R.id.nav_menu_about:
 //                VersionUtils.versionUpdate(MainActivity.this,);
-                Toast.makeText(this, "暂无更新版本", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(MainActivity.this, AboutActivity.class));
                 break;
             case R.id.nav_change_theme:
                 alertChangeTheme();
@@ -251,7 +252,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_day_night:
                 if (!Constants.osNightModel){
                     Constants.osNightModel = true;
-                    ViewUtil.setScreenBrightness(MainActivity.this, 10);
+                    ViewUtil.setScreenBrightness(MainActivity.this, 2);
                     SharedPreUtils.putBoolean(MainActivity.this,"nightModel", true);
                 }else {
                     Constants.osNightModel = false;

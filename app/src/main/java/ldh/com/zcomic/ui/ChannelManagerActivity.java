@@ -160,7 +160,7 @@ public class ChannelManagerActivity extends AppCompatActivity implements  Channe
         //屏幕亮度
         Constants.osScreenBrightValue = ViewUtil.getScreenBrightness(this);
         if (Constants.osNightModel){
-            ViewUtil.setScreenBrightness(this, 10);
+            ViewUtil.setScreenBrightness(this, 2);
         }else {
             ViewUtil.setScreenBrightness(this, Constants.osScreenBrightValue);
         }

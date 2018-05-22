@@ -18,14 +18,12 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.blankj.utilcode.utils.FileUtils;
 
@@ -43,10 +41,11 @@ import ldh.com.zcomic.ui.AboutActivity;
 import ldh.com.zcomic.ui.LoginActivity;
 import ldh.com.zcomic.ui.SearchActivity;
 import ldh.com.zcomic.utils.ActivityUtils;
+import ldh.com.zcomic.utils.LogUtils;
 import ldh.com.zcomic.utils.SharedPreUtils;
 import ldh.com.zcomic.utils.ViewUtil;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener,Toolbar.OnMenuItemClickListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, Toolbar.OnMenuItemClickListener {
     @BindView(R.id.fl_layout)
     FrameLayout mFlLayout;
     @BindView(R.id.toolbar)
@@ -65,10 +64,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private TextView user_name, user_email;
     private CircleImageView user_photo;
 
-    private  boolean enableNightMode ;
     private long waitTime = 2000;
     private long touchTime = 0;
-    private static final int REQUEST_CODE = 1;
     private AlertDialog.Builder builder;
     private String cacheSize = "";//内部缓存
     private String Size = "";//外部缓存
@@ -79,11 +76,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     class MyHandler extends Handler {
         WeakReference<MainActivity> mainActivity;
-
         public MyHandler(MainActivity activity) {
             mainActivity = new WeakReference(activity);
         }
-
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
@@ -111,15 +106,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void initData() {
         mFragmentManager = getSupportFragmentManager();
-            mClassifyFragment = new ClassifyFragment();
-//            getSupportActionBar().setTitle("分类漫画");
+        mClassifyFragment = new ClassifyFragment();
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
         fragmentTransaction.add(R.id.fl_layout, mClassifyFragment);
         fragmentTransaction.commit();
     }
 
-    protected void initView() {
-
+    private void initView() {
         mFlLayout = findViewById(R.id.fl_layout);
         mToolbar = findViewById(R.id.toolbar);
         mNavView = findViewById(R.id.nav_view);
@@ -132,7 +125,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mToggle = new ActionBarDrawerToggle
                 (this, mDrawerLayout, mToolbar, 0, 0);
         mDrawerLayout.addDrawerListener(mToggle);
-        /*同步drawerlayout的状态*/
         mToggle.syncState();
         initHeaderView();
         initUserViews();
@@ -140,14 +132,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         new Thread(new Runnable() {
             @Override
             public void run() {
-
                 cacheSize = FileUtils.getDirSize(getCacheDir());
                 if (Environment.getExternalStorageState().equals(//getCacheDir()内部缓存目录(api>=24) getExternalCacheDir SDcard外部关联目录
                         Environment.MEDIA_MOUNTED)) {
                     Size = FileUtils.getDirSize(getExternalCacheDir());
-
-                    Log.i("Zcomic", "run: --------------------------" + cacheSize + Size);
-
+                    LogUtils.i(cacheSize + Size);
                 }
             }
         }).start();
@@ -160,19 +149,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         user_photo = view.findViewById(R.id.user_photo);
     }
 
-    protected void initListener() {
+    private void initUserViews() {
+        if (User.getCurrentUser() != null) {
+            user_photo.setImageResource(R.mipmap.ic_launcher);
+            user_name.setText(User.getCurrentUser().getUsername());
+            user_email.setVisibility(View.VISIBLE);
+            user_email.setText(User.getCurrentUser().getEmail());
+        }
+    }
+
+    private void initListener() {
         mNavView.setNavigationItemSelectedListener(this);
         mNavView.setItemIconTintList(null);
         user_name.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                utils.startActivity(LoginActivity.class);
             }
         });
         user_photo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                utils.startActivity(LoginActivity.class);
             }
         });
         mToolbar.setOnMenuItemClickListener(this);
@@ -183,27 +181,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
         switch (item.getItemId()) {
             case R.id.nav_classify:
-//                hideAllFragment(fragmentTransaction);
-//                if (mClassifyFragment == null) {
-//                    mClassifyFragment = new ClassifyFragment();
-//                    fragmentTransaction.add(R.id.fl_layout, mClassifyFragment);
-//                } else {
-//                    fragmentTransaction.show(mClassifyFragment);
-//                }
-//                getSupportActionBar().setTitle("分类漫画");
                 mClassifyFragment = new ClassifyFragment();
                 fragmentTransaction.replace(R.id.fl_layout, mClassifyFragment);
                 getSupportActionBar().setTitle("分类漫画");
                 break;
             case R.id.nav_hot:
-//                hideAllFragment(fragmentTransaction);
-//                if (mHotFragment == null) {
-//                    mHotFragment = new HotFragment();
-//                    fragmentTransaction.add(R.id.fl_layout, mHotFragment);
-//                } else {
-//                    fragmentTransaction.show(mHotFragment);
-//                }
-//                getSupportActionBar().setTitle("热门漫画");
                 if (mHotFragment == null) {
                     mHotFragment = new HotFragment();
                 }
@@ -211,14 +193,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 getSupportActionBar().setTitle("热门漫画");
                 break;
             case R.id.nav_news:
-//                hideAllFragment(fragmentTransaction);
-//                if (mNewsFragment == null ) {
-//                    mNewsFragment = new NewsFragment();
-//                    fragmentTransaction.add(R.id.fl_layout, mNewsFragment);
-//                } else {
-//                    fragmentTransaction.show(mNewsFragment);
-//                }
-//                getSupportActionBar().setTitle("漫画资讯");
                 if (mNewsFragment == null) {
                     mNewsFragment = new NewsFragment();
                 }
@@ -226,12 +200,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 getSupportActionBar().setTitle("漫画资讯");
                 break;
             case R.id.nav_collect:
-//                hideAllFragment(fragmentTransaction);
-//                if (mCollectionFragment == null) {
-//                    mCollectionFragment = new CollectionFragment();
-//                }
-//                fragmentTransaction.replace(R.id.fl_layout, mCollectionFragment);
-//                getSupportActionBar().setTitle("我的收藏");
                 if (mCollectionFragment == null) {
                     mCollectionFragment = new CollectionFragment();
                 }
@@ -243,44 +211,42 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 clearCaches();
                 break;
             case R.id.nav_menu_about:
-//                VersionUtils.versionUpdate(MainActivity.this,);
-                startActivity(new Intent(MainActivity.this, AboutActivity.class));
+                utils.startActivity(AboutActivity.class);
                 break;
             case R.id.nav_change_theme:
                 alertChangeTheme();
                 break;
             case R.id.nav_day_night:
-                if (!Constants.osNightModel){
+                if (!Constants.osNightModel) {
                     Constants.osNightModel = true;
                     ViewUtil.setScreenBrightness(MainActivity.this, 2);
-                    SharedPreUtils.putBoolean(MainActivity.this,"nightModel", true);
-                }else {
+                    SharedPreUtils.putBoolean(MainActivity.this, "nightModel", true);
+                } else {
                     Constants.osNightModel = false;
-                    ViewUtil.setScreenBrightness(MainActivity.this,Constants.osScreenBrightValue);
-                    SharedPreUtils.putBoolean(MainActivity.this,"nightModel", false);
+                    ViewUtil.setScreenBrightness(MainActivity.this, Constants.osScreenBrightValue);
+                    SharedPreUtils.putBoolean(MainActivity.this, "nightModel", false);
                 }
-                    break;
+                break;
             case R.id.nav_exit:
-                        new AlertDialog.Builder(this).setTitle("是否退出当前账户？")
-                                .setNegativeButton("取消", null)
-                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        User.logOut();
-                                        user_email.setText("");
-                                        user_name.setText("登录/注册");
-                                        user_photo.setImageResource(R.drawable.default_icon);
-                                    }
-                                }).show();
-                        break;
-                }
-                mDrawerLayout.closeDrawer(GravityCompat.START);
-                fragmentTransaction.commit();
-                return true;
+                new AlertDialog.Builder(this).setTitle("是否退出当前账户？")
+                        .setNegativeButton("取消", null)
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                User.logOut();
+                                user_email.setText("");
+                                user_name.setText("登录/注册");
+                                user_photo.setImageResource(R.drawable.default_icon);
+                            }
+                        }).show();
+                break;
         }
+        mDrawerLayout.closeDrawer(GravityCompat.START);
+        fragmentTransaction.commit();
+        return true;
+    }
 
     private void clearCaches() {
-
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         if ("0.00B".equals(Size) || Size.isEmpty() || Size.length() == 0) {
             dialog.setTitle("确定要清除缓存？").setMessage("缓存大小:" + Size).setPositiveButton("确定", new DialogInterface.OnClickListener() {
@@ -319,7 +285,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             }).setNegativeButton("取消", null).show();
         }
-
     }
 
     private void alertChangeTheme() {
@@ -336,21 +301,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         view.findViewById(R.id.tv_pp).setOnClickListener(this);
         view.findViewById(R.id.tv_yellow).setOnClickListener(this);
     }
-//
-//    private void hideAllFragment(FragmentTransaction fragmentTransaction) {
-//        if (mNewsFragment != null) {
-//            fragmentTransaction.hide(mNewsFragment);
-//        }
-//        if (mClassifyFragment != null) {
-//            fragmentTransaction.hide(mClassifyFragment);
-//        }
-//        if (mHotFragment != null) {
-//            fragmentTransaction.hide(mHotFragment);
-//        }
-//        if (mCollectionFragment != null) {
-//            fragmentTransaction.hide(mCollectionFragment);
-//        }
-//    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -359,8 +309,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
                 mDrawerLayout.closeDrawer(GravityCompat.START);
             } else if ((currentTime - touchTime) >= waitTime) {
-                //让Toast的显示时间和等待时间相同
-                Toast.makeText(this, "再按一次退出", Toast.LENGTH_SHORT).show();
+                utils.showToast("再按一次退出");
                 touchTime = currentTime;
             } else {
                 MainActivity.this.finish();
@@ -368,15 +317,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             return true;
         }
         return super.onKeyDown(keyCode, event);
-    }
-
-    private void initUserViews() {
-        if (User.getCurrentUser() != null) {
-            user_photo.setImageResource(R.mipmap.ic_launcher);
-            user_name.setText(User.getCurrentUser().getUsername());
-            user_email.setVisibility(View.VISIBLE);
-            user_email.setText(User.getCurrentUser().getEmail());
-        }
     }
 
     @Override
@@ -416,7 +356,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int[] themes = new int[]{R.style.AppTheme, R.style.AppTheme_Blue, R.style.AppTheme_Green,
                 R.style.AppTheme_Orange, R.style.AppTheme_Pink, R.style.AppTheme_Red,
                 R.style.AppTheme_Purple, R.style.AppTheme_PP, R.style.AppTheme_Yellow,
-              };
+        };
         SharedPreUtils.putInt(this, "theme_id", themes[index]);
         Intent intent = getIntent();
         overridePendingTransition(R.anim.abc_popup_enter, R.anim.abc_popup_exit);
@@ -435,8 +375,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.toolbar_menu_search:
-                Intent mIntent = new Intent(MainActivity.this, SearchActivity.class);
-                startActivity(mIntent);
+                utils.startActivity(SearchActivity.class);
                 break;
         }
         return false;

@@ -21,7 +21,7 @@ import ldh.com.zcomic.adapter.FixedPagerAdapter;
 import ldh.com.zcomic.base.BaseFragment;
 import ldh.com.zcomic.ui.ChannelManagerActivity;
 import ldh.com.zcomic.utils.DepthPageTransformer;
-import ldh.com.zcomic.utils.ListDataSave;
+import ldh.com.zcomic.utils.SharedPreUtils;
 
 /**
  * Created by allen liu on 2018/5/2.
@@ -35,41 +35,22 @@ public class ClassifyFragment extends BaseFragment {
     @BindView(R.id.viewpager_classify)
     ViewPager mViewpager;
     List<Fragment> mFragmentList;
-    List<String> mTitleList;
     private List<ComicSource> myChannelList;
     private List<ComicSource> moreChannelList;
     private FixedPagerAdapter fixedPagerAdapter;
     private SharedPreferences sharedPreferences;
-    private ListDataSave listDataSave;
     private boolean isFirst;
     private ClassifyPagerFragment fragment;
     //当前位置
     private int tabPosition;
-//    private String[] mStrings = {
-//            "全部", "爆笑", "热血", "冒险", "恐怖", "科幻", "魔幻",
-//            "玄幻", "校园", "悬疑", "推理", "萌系"};
-
     @Override
     protected int getResRootViewId() {
         return R.layout.fragment_classify;
     }
-
     @Override
     protected void initData() {
-//        mTitleList = new ArrayList<>();
         mFragmentList = new ArrayList<>();
-        sharedPreferences = getActivity().getSharedPreferences("Setting", Context.MODE_PRIVATE); //初始化
-        listDataSave = new ListDataSave(getActivity(), "channel");//初始化
-//        for (int i = 0; i < 12; i++) {
-//            ClassifyPagerFragment fragment = ClassifyPagerFragment.newInstance(getMyChannel().get(i).getThemeId());
-//            mFragmentList.add(fragment);
-////            Log.i("class","fragment");
-//            mTitleList.add(getMyChannel().get(i).getTitle());
-//            mClassifyTab.addTab(mClassifyTab.newTab().setText(mTitleList.get(i)));
-//        }
-//        mViewpager.setAdapter(new ClassifyAdapter(getChildFragmentManager()));
-//        mViewpager.setOffscreenPageLimit(mTitleList.size());
-//        mViewpager.setPageTransformer(true, new DepthPageTransformer());
+        sharedPreferences = utils.getActivity().getSharedPreferences("Setting", Context.MODE_PRIVATE); //初始化
         fixedPagerAdapter = new FixedPagerAdapter(getChildFragmentManager());
         mClassifyTab.setupWithViewPager(mViewpager);
         bindData();
@@ -94,13 +75,13 @@ public class ClassifyFragment extends BaseFragment {
             moreChannelList = getMoreChannel();
             myChannelList = setType(myChannelList);
             moreChannelList = setType(moreChannelList);
-            listDataSave.setDataList("myChannel", myChannelList);
-            listDataSave.setDataList("moreChannel", moreChannelList);
+            SharedPreUtils.setDataList(utils.getActivity(),"myChannel", myChannelList);
+            SharedPreUtils.setDataList(utils.getActivity(),"moreChannel", moreChannelList);
             SharedPreferences.Editor edit = sharedPreferences.edit();
             edit.putBoolean("isFirst", false);
             edit.commit();
         } else {
-            myChannelList = listDataSave.getDataList("myChannel", ComicSource.class);
+            myChannelList = SharedPreUtils.getDataList(utils.getActivity(),"myChannel", ComicSource.class);
         }
             mFragmentList.clear();
         for (int i = 0; i < myChannelList.size(); i++) {
@@ -112,7 +93,6 @@ public class ClassifyFragment extends BaseFragment {
         } else {
             mClassifyTab.setTabMode(TabLayout.MODE_SCROLLABLE);
         }
-
     }
 
     /**
@@ -142,8 +122,6 @@ public class ClassifyFragment extends BaseFragment {
         }
         return list;
     }
-
-
     @Override
     protected void initListener() {
         mClassifyTab.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -151,12 +129,9 @@ public class ClassifyFragment extends BaseFragment {
             public void onTabSelected(TabLayout.Tab tab) {
                 tabPosition = tab.getPosition();
             }
-
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-
             }
-
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
 

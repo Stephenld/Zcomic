@@ -17,7 +17,6 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.model.GlideUrl;
@@ -37,6 +36,7 @@ import ldh.com.zcomic.base.BaseController;
 import ldh.com.zcomic.base.UserController;
 import ldh.com.zcomic.bean.ChapterBean;
 import ldh.com.zcomic.bean.ComicItem;
+import ldh.com.zcomic.utils.ActivityUtils;
 import ldh.com.zcomic.utils.JsoupUtils;
 import ldh.com.zcomic.utils.OkHttpResultCallback;
 import ldh.com.zcomic.utils.OkHttpUtil;
@@ -44,7 +44,7 @@ import ldh.com.zcomic.view.FastBlur;
 import okhttp3.Call;
 
 /**
- * Created by allen liu on 2018/5/9.
+ * Created by allen liu on 2018/5/12.
  */
 
 public class ComicItemActivity extends BaseActivity {
@@ -97,6 +97,7 @@ public class ComicItemActivity extends BaseActivity {
     private ChapterAdapter mAdapter;
     private List<ChapterBean> mList;
     private UserController userController;
+    private ActivityUtils utils;
 
     @Override
     protected int setLayoutResID() {
@@ -108,6 +109,7 @@ public class ComicItemActivity extends BaseActivity {
         userController = UserController.getInstance();
         progressBar.setVisibility(View.VISIBLE);
         mList = new ArrayList<>();
+        utils = new ActivityUtils(this);
         mUrl = getIntent().getStringExtra("comicItemUrl");
         mTitle = getIntent().getStringExtra("comicItemTitle");
         comicId = getIntent().getStringExtra("comicId");
@@ -189,17 +191,17 @@ public class ComicItemActivity extends BaseActivity {
                 userController.addUserCollect(comicId, ivCollect, new BaseController.onBmobUserListener() {
                     @Override
                     public void onSuccess(String success) {
-                        Toast.makeText(ComicItemActivity.this, success,Toast.LENGTH_SHORT).show();
+                        utils.showToast(success);
                     }
 
                     @Override
                     public void onError(String error) {
-                        Toast.makeText(ComicItemActivity.this, error,Toast.LENGTH_SHORT).show();
+                        utils.showToast(error);
                     }
 
                     @Override
                     public void onLoading(String loading) {
-                        Toast.makeText(ComicItemActivity.this, loading,Toast.LENGTH_SHORT).show();
+                        utils.showToast(loading);
                     }
                 });
             }

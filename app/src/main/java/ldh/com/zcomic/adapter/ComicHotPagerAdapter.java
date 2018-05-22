@@ -24,7 +24,6 @@ public class ComicHotPagerAdapter extends BasePagerAdapter<ComicBean> {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_comic_hot, parent, false);
         return new ComicHotHolder(view);
     }
-
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         ((ComicHotHolder)holder).bindView(mDataList.get(position));
@@ -38,7 +37,7 @@ public class ComicHotPagerAdapter extends BasePagerAdapter<ComicBean> {
         TextView mTvCurrent;
         @BindView(R.id.tv_popular)
         TextView mTvPopular;
-         ComicHotHolder(View itemView) {
+        ComicHotHolder(View itemView) {
             super(itemView);
         }
         @Override

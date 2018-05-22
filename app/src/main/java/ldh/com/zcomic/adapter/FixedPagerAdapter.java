@@ -13,7 +13,7 @@ import java.util.List;
 import ldh.com.channelmanager.ComicSource;
 
 /**
- * Created by Bei on 2016/12/25.
+ * Created by AllenLiu on 2018/5/2.
  */
 
 public class FixedPagerAdapter extends FragmentStatePagerAdapter {
@@ -38,7 +38,6 @@ public class FixedPagerAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         return fragments.get(position);
     }
-
 
     @Override
     public int getCount() {
@@ -100,6 +99,4 @@ public class FixedPagerAdapter extends FragmentStatePagerAdapter {
     public int getItemPosition(Object object) {
         return POSITION_NONE;
     }
-
-
 }

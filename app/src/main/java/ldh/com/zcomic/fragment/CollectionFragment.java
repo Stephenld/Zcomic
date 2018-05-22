@@ -1,12 +1,10 @@
 package ldh.com.zcomic.fragment;
 
 import android.content.Intent;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +18,8 @@ import ldh.com.zcomic.base.ComicController;
 import ldh.com.zcomic.base.UserController;
 import ldh.com.zcomic.bean.ComicBean;
 import ldh.com.zcomic.ui.ComicItemActivity;
+import ldh.com.zcomic.utils.ActivityUtils;
+import ldh.com.zcomic.utils.LogUtils;
 
 /**
  * Created by allen liu on 2018/5/6.
@@ -36,6 +36,7 @@ public class CollectionFragment extends BaseFragment implements View.OnClickList
     private List<String> collectList;
     private ComicCollectAdapter mCollectAdapter;
     private List<ComicBean> comicBeans;
+    private ActivityUtils utils;
 
     @Override
     protected int getResRootViewId() {
@@ -45,102 +46,15 @@ public class CollectionFragment extends BaseFragment implements View.OnClickList
     @Override
     protected void initData() {
         comicBeans = new ArrayList<>();
+        utils = new ActivityUtils(this);
         userController = UserController.getInstance();
         comicController = ComicController.getInstance();
-//        initCollectList(collectList);
         initCollectData();
     }
-
-//    private void initCollectList(final List<String> collectList) {
-//
-//        if (collectList != null) {
-//            comicController = ComicController.getInstance();
-//            comicController.query(collectList, new ComicController.OnBmobListener() {
-//                @Override
-//                public void onSuccess(final List<ComicBean> list) {
-////                    for(int i=0;i<selectSingle(list).size();i++) {
-//                        comicBeans.add(selectSingle(list).get(i));
-//                    }
-//                    comicBeans = selectSingle(list);
-//                    btnDelete.setVisibility(View.VISIBLE);
-//                    mCollectAdapter = new ComicCollectAdapter(getActivity(), comicBeans);
-//                    lvCollect.setAdapter(mCollectAdapter);
-//
-//                    mCollectAdapter.setOnRecyclerViewListener(new BasePagerAdapter.OnClickRecyclerViewListener() {
-//                        @Override
-//                        public void onItemClick(int position) {
-//                            Intent intent = new Intent(getActivity(), ComicItemActivity.class);
-//                            String url = comicBeans.get(position).getContentUrl();
-//                            intent.putExtra("comicItemUrl", url);
-//                            intent.putExtra("comicItemTitle", comicBeans.get(position).getTitle());
-//                            intent.putExtra("comicId", comicBeans.get(position).getComicId());
-//                            startActivity(intent);
-//                        }
-//
-//                        @Override
-//                        public boolean onItemLongClick(final int position) {
-////                            DialogUtils.showStandardDialog(getActivity(), "", "是否从收藏中删除漫画[ " + comicBeans.get(position).getTitle() + " ]")
-////                                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-////                                        @Override
-////                                        public void onClick(DialogInterface dialog, int which) {
-////                                            dialog.dismiss();
-////                                        }
-////                                    })
-////                                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-////                                        @Override
-////                                        public void onClick(DialogInterface dialog, int which) {
-////                                            Log.i("collection",comicBeans.get(position).getComicId());
-////                                            userController.deleteUserLove(comicBeans.get(position).getObjectId(), new BaseController.OnBmobCommonListener() {
-////                                                @Override
-////                                                public void onSuccess(String success) {
-////                                                    Toast.makeText(getActivity(), success, Toast.LENGTH_SHORT).show();
-////                                                    comicBeans.remove(position);
-////                                                    Log.i("collection",position+"a");
-////                                                    collectList.remove(position);
-////                                                    Log.i("collection",position+"h");
-//////                                                    userController.updateUserLove(collectList);
-//////                                                    userController.clearUserLove();
-////
-////                                                    userController.getCurrentUser().collect_comicId = collectList;
-////                                                    userController.getCurrentUser().update(new UpdateListener() {
-////                                                        @Override
-////                                                        public void done(BmobException e) {
-////                                                        }
-////                                                    });
-////
-////                                                    Log.i("collection",position+"z");
-////                                                    initCollectList(collectList);
-////                                                }
-////                                                @Override
-////                                                public void onError(String error) {
-////                                                    Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
-////                                                }
-////                                            });
-////                                        }
-////                                    })
-////                                    .show();
-//                            return true;
-//                        }
-//                    });
-
-//                }
-
-//                @Override
-//                public void onError(String error) {
-//                    Log.i("CollectionFragment", error);
-//                }
-//            });
-//        } else {
-//            Toast.makeText(getActivity(), "收藏为空", Toast.LENGTH_SHORT).show();
-//        }
-//
-//
-//    }
 
     @Override
     protected void initListener() {
         btnDelete.setOnClickListener(this);
-
     }
 
     @Override
@@ -149,14 +63,14 @@ public class CollectionFragment extends BaseFragment implements View.OnClickList
             userController.deleteUserLove(mCollectAdapter.getSelected_comicId(), new BaseController.OnBmobCommonListener() {
                 @Override
                 public void onSuccess(String success) {
-                    Toast.makeText(getActivity(), success, Toast.LENGTH_SHORT).show();
+                    utils.showToast(success);
                     //更新UI
                     initCollectData();
                 }
 
                 @Override
                 public void onError(String error) {
-                    Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
+                    utils.showToast(error);
                 }
             });
         }
@@ -164,13 +78,13 @@ public class CollectionFragment extends BaseFragment implements View.OnClickList
 
     public void initCollectData() {
         collectList = userController.getCollectId();
-        Log.i("ColectionFragmenta", collectList.size() + "条");
+        LogUtils.i(collectList.size() + "条");
         comicController.query(collectList, new ComicController.OnBmobListener() {
             @Override
             public void onSuccess(final List<ComicBean> list) {
-                Log.i("ColectionFragmentb", list.size() + "条");
+                LogUtils.i(list.size() + "条");
                 comicBeans = selectSingle(list);
-                Log.i("ColectionFragmentc", comicBeans.size() + "条");
+                LogUtils.i(comicBeans.size() + "条");
                 btnDelete.setVisibility(View.VISIBLE);
                 mCollectAdapter = new ComicCollectAdapter(getActivity(), comicBeans);
                 lvCollect.setAdapter(mCollectAdapter);
@@ -195,7 +109,6 @@ public class CollectionFragment extends BaseFragment implements View.OnClickList
             }
         });
     }
-
     private List<ComicBean> selectSingle(List<ComicBean> list) {
         for (int i = 0; i < list.size(); i++) {
             for (int j = list.size() - 1; j > i; j--) {

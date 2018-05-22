@@ -193,7 +193,6 @@ public class OkHttpUtil {
             public void onFailure(Call call, IOException e) {
                 sendFailedCallback(call, e, okHttpResultCallback);
             }
-
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 try {

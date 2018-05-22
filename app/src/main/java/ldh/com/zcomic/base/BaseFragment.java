@@ -12,6 +12,7 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 
 import butterknife.ButterKnife;
 import ldh.com.zcomic.entity.Constants;
+import ldh.com.zcomic.utils.ActivityUtils;
 import ldh.com.zcomic.utils.ViewUtil;
 
 /**
@@ -19,29 +20,26 @@ import ldh.com.zcomic.utils.ViewUtil;
  */
 
 public abstract class BaseFragment extends Fragment {
-//    protected Context mContext ;
     protected View mView ;
     protected Activity mActivity;
+    protected ActivityUtils utils;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         mActivity = (Activity)context;
     }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         int resRootViewId =  getResRootViewId () ;
         mView = inflater.inflate(resRootViewId , container , false) ;
-//      mContext = this.getContext() ;
-//        initData(getArguments());
         ButterKnife.bind(this,mView); // 不能漏写，不然后面会报空指针异常
+        utils = new ActivityUtils(this);
         Fresco.initialize(getActivity());
         initData();
         initListener();
         return mView ;
     }
-//    protected abstract void initData(Bundle arguments);
     protected abstract int getResRootViewId() ;
     protected abstract void initData();
     protected abstract void initListener();

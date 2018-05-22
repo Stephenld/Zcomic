@@ -22,7 +22,6 @@ import ldh.com.channelmanager.base.IChannelType;
 import ldh.com.channelmanager.utils.GridItemDecoration;
 import ldh.com.zcomic.R;
 import ldh.com.zcomic.entity.Constants;
-import ldh.com.zcomic.utils.ListDataSave;
 import ldh.com.zcomic.utils.SharedPreUtils;
 import ldh.com.zcomic.utils.ViewUtil;
 
@@ -37,7 +36,6 @@ public class ChannelManagerActivity extends AppCompatActivity implements  Channe
     private List<ComicSource> mRecChannelList;
     private Context context;
     private int tabposition;
-    private ListDataSave listDataSave;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,7 +45,6 @@ public class ChannelManagerActivity extends AppCompatActivity implements  Channe
         getIntentData();
         context = this;
         initToolbar();
-        listDataSave = new ListDataSave(this, "channel");
         mRecyclerView = findViewById(ldh.com.channelmanager.R.id.id_tab_recycler_view);
         GridLayoutManager gridLayout = new GridLayoutManager(context, 4);
         gridLayout.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
@@ -83,7 +80,7 @@ public class ChannelManagerActivity extends AppCompatActivity implements  Channe
     private void initData() {
         mMyChannelList = new ArrayList<>();
 
-        List<ComicSource> list = listDataSave.getDataList("myChannel", ComicSource.class);
+        List<ComicSource> list = SharedPreUtils.getDataList(this,"myChannel", ComicSource.class);
         for (int i = 0; i < list.size(); i ++){
             ComicSource comicChannelBean = list.get(i);
             if (i == tabposition){
@@ -103,7 +100,7 @@ public class ChannelManagerActivity extends AppCompatActivity implements  Channe
         }
 
         mRecChannelList = new ArrayList<>();
-        List<ComicSource> moreChannelList = listDataSave.getDataList("moreChannel", ComicSource.class);
+        List<ComicSource> moreChannelList = SharedPreUtils.getDataList(this,"moreChannel", ComicSource.class);
         for (ComicSource comicChannelBean : moreChannelList) {
             mRecChannelList.add(comicChannelBean);
         }
@@ -117,8 +114,8 @@ public class ChannelManagerActivity extends AppCompatActivity implements  Channe
             // 将当前模式设置为不可编辑状态
             projectChannelBean.setEditStatus(0);
         }
-        listDataSave.setDataList("myChannel", mMyChannelList);
-        listDataSave.setDataList("moreChannel", mRecChannelList);
+        SharedPreUtils.setDataList(this,"myChannel", mMyChannelList);
+        SharedPreUtils.setDataList(this,"moreChannel", mRecChannelList);
 
         super.onPause();
     }

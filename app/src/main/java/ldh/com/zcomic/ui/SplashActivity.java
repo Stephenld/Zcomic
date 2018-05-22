@@ -1,7 +1,5 @@
 package ldh.com.zcomic.ui;
 
-import android.content.Intent;
-
 import com.daimajia.androidanimations.library.Techniques;
 import com.viksaa.sssplash.lib.activity.AwesomeSplash;
 import com.viksaa.sssplash.lib.cnst.Flags;
@@ -9,14 +7,17 @@ import com.viksaa.sssplash.lib.model.ConfigSplash;
 
 import ldh.com.zcomic.MainActivity;
 import ldh.com.zcomic.R;
+import ldh.com.zcomic.utils.ActivityUtils;
 
 /**
  * Created by allen liu on 2018/5/2.
  */
 
 public class SplashActivity extends AwesomeSplash {
+    private ActivityUtils utils;
     @Override
     public void initSplash(ConfigSplash configSplash) {
+        utils = new ActivityUtils(this);
 
         configSplash.setBackgroundColor(R.color.colorPrimary); //any color you want form colors.xml
         configSplash.setAnimCircularRevealDuration(2100); //int ms
@@ -46,7 +47,7 @@ public class SplashActivity extends AwesomeSplash {
     public void animationsFinished() {
         //transit to another activity here
         //or do whatever you want
-        startActivity(new Intent(this,MainActivity.class));
+        utils.startActivity(MainActivity.class);
         finish();
     }
 }

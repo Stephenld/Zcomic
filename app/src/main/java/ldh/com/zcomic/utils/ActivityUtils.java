@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.net.Uri;
-import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
@@ -40,10 +39,7 @@ public class ActivityUtils {
     /**
      * 通过弱引用获取Activity对象，此方法可能返回null，调用后需要做检查。
      */
-    private
-    @Nullable
-    Activity getActivity() {
-
+    public Activity getActivity() {
         if (activityWeakReference != null) return activityWeakReference.get();
         if (fragmentWeakReference != null) {
             Fragment fragment = fragmentWeakReference.get();

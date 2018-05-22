@@ -21,8 +21,6 @@ public class ComicPageActivity extends BaseActivity {
     WebView mWebView;
     @BindView(R.id.toolbar_chapter)
     Toolbar mToolbar;
-
-
     private String mUrl;
     private String mTitle;
 

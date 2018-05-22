@@ -3,8 +3,13 @@ package ldh.com.zcomic.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import org.json.JSONArray;
-import org.json.JSONException;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SharedPreUtils {
 
@@ -129,41 +134,32 @@ public class SharedPreUtils {
     }
 
     /**
-     * 保存String数组
+     * 保存List
      */
-    public static void saveStringArray(Context mContext, String key, String[] strs) {
-        SharedPreferences sp = null;
-        if (sp == null) {
-            sp = mContext.getSharedPreferences("config", Context.MODE_PRIVATE);
-            sp.edit().remove(key);
-        }
-        JSONArray jSONArray = new JSONArray();
-        for (String s : strs) {
-            jSONArray.put(s);
-        }
-        sp.edit().putString(key, jSONArray.toString()).commit();
+    public static <T> void setDataList(Context mContext,String tag, List<T> datalist) {
+        if (null == datalist || datalist.size() <= 0)
+            return;
+        Gson gson = new Gson();
+        //转换成json数据，再保存
+        String strJson = gson.toJson(datalist);
+//        editor.clear();
+        SharedPreferences sp = mContext.getSharedPreferences("channel", Context.MODE_PRIVATE);
+        sp.edit().putString(tag, strJson).commit();
     }
 
     /**
-     * 读取String数组
+     * 获取list
      */
-
-    public static String[] getStringArray(Context mContext, String key) {
-        SharedPreferences sp = null;
-        String[] strs;
-        if (sp == null) {
-            sp = mContext.getSharedPreferences("config", Context.MODE_PRIVATE);
+    public static <T> List<T> getDataList(Context mContext,String tag, Class<T> clazz) {
+        List<T> datalist=new ArrayList<T>();
+        String strJson = mContext.getSharedPreferences("channel", Context.MODE_PRIVATE).getString(tag, null);
+        if (null == strJson) {
+            return datalist;
         }
-        try {
-            JSONArray jSONArray = new JSONArray(sp.getString(key, "[]"));
-            strs = new String[jSONArray.length()];
-            for (int i = 0; i < jSONArray.length(); i++) {
-                strs[i] = jSONArray.getString(i);
-            }
-            return strs;
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return null;
+        JsonArray array = new JsonParser().parse(strJson).getAsJsonArray();
+        for (final JsonElement elem : array) {
+            datalist.add(new Gson().fromJson(elem, clazz));
         }
+        return datalist;
     }
 }

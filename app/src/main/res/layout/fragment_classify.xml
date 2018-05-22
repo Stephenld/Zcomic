@@ -18,8 +18,7 @@
         android:background="@color/tab_gray"
         app:tabIndicatorColor="?attr/colorPrimary"
         app:tabSelectedTextColor="?attr/colorPrimary"
-        app:tabTextColor="@color/textColorBlack"
-       />
+        app:tabTextColor="@color/textColorBlack"/>
     <ImageView
         android:id="@+id/iv_add"
         android:layout_width="28dp"

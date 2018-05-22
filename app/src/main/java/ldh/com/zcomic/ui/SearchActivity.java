@@ -11,7 +11,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -25,6 +24,7 @@ import ldh.com.zcomic.adapter.BasePagerAdapter;
 import ldh.com.zcomic.adapter.ComicPagerAdapter;
 import ldh.com.zcomic.bean.ComicBean;
 import ldh.com.zcomic.entity.Constants;
+import ldh.com.zcomic.utils.ActivityUtils;
 import ldh.com.zcomic.utils.JsoupUtils;
 import ldh.com.zcomic.utils.OkHttpResultCallback;
 import ldh.com.zcomic.utils.OkHttpUtil;
@@ -47,12 +47,13 @@ public class SearchActivity extends AppCompatActivity {
     ProgressBar search_pb;
     private List<ComicBean> mList;
     private  ComicPagerAdapter mSearchAdapter;
-
+    private ActivityUtils utils;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.search_activity);
         ButterKnife.bind(this);
+        utils = new ActivityUtils(this);
     }
     @Override
     protected void onStart() {
@@ -68,7 +69,7 @@ public class SearchActivity extends AppCompatActivity {
     @OnClick(R.id.ib_search)
     public void onViewClicked() {
         if (TextUtils.isEmpty(et_search.getText().toString())){
-            Toast.makeText(this,"请输入您要搜索的关键词",Toast.LENGTH_SHORT).show();
+            utils.showToast("请输入您要搜索的关键词");
         }else {
             SearchComic(et_search.getText().toString());
         }

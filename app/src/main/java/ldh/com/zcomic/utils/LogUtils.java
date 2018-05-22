@@ -7,9 +7,9 @@ package ldh.com.zcomic.utils;
 @SuppressWarnings("unused")
 public final class LogUtils {
 
-    private static final String TAG = "QNews---->";
+    private static final String TAG = "Zcomic---->";
 
-    private static final String TAG_TRACE = "QNews----->";
+    private static final String TAG_TRACE = "Zcomic----->";
 
     private static final class StackTraceDebug extends RuntimeException {
         final static private long serialVersionUID = 27058374L;

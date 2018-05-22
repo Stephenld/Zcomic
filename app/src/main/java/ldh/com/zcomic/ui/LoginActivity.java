@@ -1,18 +1,15 @@
 package ldh.com.zcomic.ui;
 
-import android.content.Intent;
 import android.support.v7.widget.Toolbar;
 import android.text.Selection;
 import android.text.Spannable;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import butterknife.BindView;
 import cn.bmob.v3.exception.BmobException;
@@ -21,6 +18,8 @@ import ldh.com.zcomic.MainActivity;
 import ldh.com.zcomic.R;
 import ldh.com.zcomic.base.BaseActivity;
 import ldh.com.zcomic.bean.User;
+import ldh.com.zcomic.utils.ActivityUtils;
+import ldh.com.zcomic.utils.LogUtils;
 
 /**
  * Created by allen liu on 2018/5/3.
@@ -51,14 +50,7 @@ public class LoginActivity extends BaseActivity {
     // 登录信息
     private String emailAddressStr;
     private String passwordStr;
-
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.login_activity);
-//        initView();
-//        userLogin(); // 用户登录
-//    }
+    private ActivityUtils utils;
 
     @Override
     protected int setLayoutResID() {
@@ -66,6 +58,7 @@ public class LoginActivity extends BaseActivity {
     }
     @Override
     protected void initView() {
+         utils = new ActivityUtils(this);
          setSupportActionBar(toolbarLogin);   // 这一步要加上，很关键，否则getSupportActionBar().setTitle等会报空指针异常
          getSupportActionBar().setTitle("用户登录");
     }
@@ -112,9 +105,9 @@ public class LoginActivity extends BaseActivity {
                 // 输入框的内容的简单校验
                 if ("".equals(emailAddressStr)) {
                     emailWarnImv.setVisibility(View.VISIBLE);
-                    Toast.makeText(LoginActivity.this, "请输入注册的邮箱地址!", Toast.LENGTH_LONG).show();
+                    utils.showToast("请输入注册的邮箱地址！");
                 } else if ("".equals(passwordStr)) {
-                    Toast.makeText(LoginActivity.this, "请输入您的密码!", Toast.LENGTH_LONG).show();
+                    utils.showToast("请输入您的密码！");
                 } else if (!"".equals(emailAddressStr) && !"".equals(passwordStr)) {
                     emailWarnImv.setVisibility(View.GONE);
                     User appUser = new User();
@@ -124,17 +117,17 @@ public class LoginActivity extends BaseActivity {
                         @Override
                         public void done(User appUser, BmobException e) {
                             if (appUser != null) {
-                                Log.i(LOG_MSG, "$$$$$$: 用户登陆成功!");
-                                Toast.makeText(LoginActivity.this, "登录成功, 欢迎使用!", Toast.LENGTH_SHORT).show();
-                                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                                LogUtils.i("$$$$$$: 用户登陆成功!");
+                                utils.showToast("登录成功，欢迎使用！");
+                                utils.startActivity(MainActivity.class);
                             } else {
-                                Log.i(LOG_MSG, ">>>>>> 登录失败: " + e.getErrorCode() + ",  " + e.getMessage());
+                                LogUtils.i( ">>>>>> 登录失败: " + e.getErrorCode() + ",  " + e.getMessage());
                                 if (BMOB_101 == e.getErrorCode()) {
-                                    Toast.makeText(LoginActivity.this, "用户名或密码错误!", Toast.LENGTH_LONG).show();
+                                    utils.showToast("用户名或密码错误！");
                                 } else if (BMOB_9016 == e.getErrorCode()) {
-                                    Toast.makeText(LoginActivity.this, "网络不可用, 请检查您的网络设置!", Toast.LENGTH_LONG).show();
+                                    utils.showToast("网络不可用，请检查您的网络设置！");
                                 } else {
-                                    Toast.makeText(LoginActivity.this, "登录失败!", Toast.LENGTH_LONG).show();
+                                    utils.showToast("登录失败！");
                                 }
                             }
                         }
@@ -147,14 +140,14 @@ public class LoginActivity extends BaseActivity {
         forgetPasswdTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(LoginActivity.this, ResetPasswordActivity.class));
+                utils.startActivity(ResetPasswordActivity.class);
             }
         });
         // 注册
         registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
+                utils.startActivity(RegisterActivity.class);
             }
         });
     }

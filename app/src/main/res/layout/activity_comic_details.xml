@@ -5,8 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/rl_main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="match_parent">
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
@@ -18,8 +17,7 @@
             android:layout_height="?attr/actionBarSize"
             android:theme="@style/ThemeOverlay.AppCompat.Dark"
             toolbar:title="漫画详情"
-            toolbar:titleTextAppearance="?android:attr/textAppearanceMedium"
-          />
+            toolbar:titleTextAppearance="?android:attr/textAppearanceMedium"/>
     </android.support.design.widget.AppBarLayout>
 
     <ProgressBar

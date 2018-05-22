@@ -90,7 +90,6 @@ public class NewsPagerFragment extends BaseFragment {
             public void onError(Call call, Exception e) {
                 e.getMessage();
             }
-
             @Override
             public void onResponse(byte[] bytes) {
                 try {

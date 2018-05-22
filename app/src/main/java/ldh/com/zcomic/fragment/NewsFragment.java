@@ -50,7 +50,6 @@ public class NewsFragment extends BaseFragment {
     protected int getResRootViewId() {
         return R.layout.news_fragment;
     }
-
     @Override
     protected void initData() {
         comicList = new ArrayList<>();
@@ -90,8 +89,6 @@ public class NewsFragment extends BaseFragment {
                 startActivity(intent);
             }
         });
-
-
     }
     class NewsAdapter extends FragmentPagerAdapter {
         public NewsAdapter(FragmentManager fm) {
@@ -133,7 +130,6 @@ public class NewsFragment extends BaseFragment {
             }
         });
     }
-
     private void getCategoryComicSuccess(List<ComicBean> list) {
           comicList= list;
         for (ComicBean bean : list) {

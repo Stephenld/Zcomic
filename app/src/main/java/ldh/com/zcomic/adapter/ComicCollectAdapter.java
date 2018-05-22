@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -91,8 +90,6 @@ public class ComicCollectAdapter extends BaseAdapter implements View.OnClickList
         private SimpleDraweeView mIvImage;
         private TextView mTvTitle, mTvAuthor, mTvAll, mTvDesc;
         private ImageView mIvCheck;
-        private LinearLayout mLyComic;
-
         ViewHolder(View view) {
             mIvImage = view.findViewById(R.id.item_collection_img);
             mTvTitle = view.findViewById(R.id.item_collection_title);
@@ -110,7 +107,6 @@ public class ComicCollectAdapter extends BaseAdapter implements View.OnClickList
             checkAndSum(position, v);
         }
     }
-
     private void checkAndSum(int position, View v) {
         ComicBean comic = list.get(position);
         String objectId = comic.getComicId();
